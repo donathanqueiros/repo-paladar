@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+#root{
+    /* background-image: url("http://www.pubdopastel.com.br/img/slider/slide1.jpg"); */
+    background-image: linear-gradient(rgba(255,255,255,.3) 0%, rgba(255,255,255,.3) 100%), url("http://www.pubdopastel.com.br/img/slider/slide1.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+
+    
+}
+
+.container-principal{
+    margin: auto;
+    width: 1000px;
+
+}

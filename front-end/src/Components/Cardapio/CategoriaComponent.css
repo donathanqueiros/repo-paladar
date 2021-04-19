@@ -1,0 +1,23 @@
+
+.container-categoria{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    margin-top: 10px ;
+
+    
+}
+
+.titulo{
+    font-size: 50px;
+    padding-top: 20px;
+    padding-left: 60px;
+}
+
+.lista-item{
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 65px;
+    flex-wrap: wrap;
+}
