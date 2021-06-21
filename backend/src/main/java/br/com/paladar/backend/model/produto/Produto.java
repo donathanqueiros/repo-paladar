@@ -23,19 +23,19 @@ public class Produto {
     private double preco;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_TIPO_PRODUTO")
-    private TipoProduto tipoProduto;
+    @JoinColumn(name = "ID_CATEGORIA_PRODUTO")
+    private CategoriaProduto categoriaProduto;
 
 
     public Produto() {
 
     }
 
-    public Produto(String nome, String descricao, double preco, TipoProduto tipoProduto) {
+    public Produto(String nome, String descricao, double preco, CategoriaProduto categoriaProduto) {
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
-        this.tipoProduto = tipoProduto;
+        this.categoriaProduto = categoriaProduto;
     }
 
 
@@ -71,11 +71,11 @@ public class Produto {
         this.preco = preco;
     }
 
-    public TipoProduto getTipoProduto() {
-        return tipoProduto;
+    public CategoriaProduto getCategoriaProduto() {
+        return categoriaProduto;
     }
 
-    public void setTipoProduto(TipoProduto tipoProduto) {
-        this.tipoProduto = tipoProduto;
+    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+        this.categoriaProduto = categoriaProduto;
     }
 }

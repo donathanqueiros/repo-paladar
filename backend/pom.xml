@@ -14,7 +14,7 @@
     <name>backend</name>
     <description>Backend Site Paladar</description>
     <properties>
-        <java.version>15</java.version>
+        <java.version>16</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -51,6 +51,26 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>spring-data-jpa</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <version>2.4.8</version>
+        </dependency>
+        <dependency>
+            <artifactId>spring-context</artifactId>
+            <groupId>org.springframework</groupId>
+            <version>5.3.6</version>
+        </dependency>
+        <dependency>
+            <artifactId>spring-beans</artifactId>
+            <groupId>org.springframework</groupId>
+            <version>5.3.6</version>
+        </dependency>
+        <dependency>
+            <artifactId>spring-web</artifactId>
+            <groupId>org.springframework</groupId>
+            <version>5.3.6</version>
         </dependency>
     </dependencies>
 

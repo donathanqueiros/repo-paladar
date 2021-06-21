@@ -1,77 +1,49 @@
-import React, { Component } from 'react';
-import BannerComponent from './BannerComponent';
-import CategoriaComponent from './CategoriaComponent';
-import ItemCategoriaComponent from './ItemCategoriaComponent';
-import './CardapioComponent.css'
-import ProdutoService from '../../services/ProdutoService';
-import TipoProdutoService from '../../services/TipoProdutoService';
+import React, { useEffect, useState } from "react";
+import CategoriaComponent from "./CategoriaComponent";
+import ItemCategoriaComponent from "./ItemCategoriaComponent";
+import "./CardapioComponent.css";
+import ProdutoService from "../../services/ProdutoService";
+import CategoriaService from "../../services/CategoriaService";
 
+const CardapioComponent = () => {
+  const [produtos, setProdutos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
 
+  useEffect(() => {
+    ProdutoService.getProdutos().then((res) => {
+      console.log(res.data);
+      setProdutos(res.data);
+    });
+    CategoriaService.getCategorias().then((res) => {
+      console.log(res.data);
+      setCategorias(res.data);
+    });
+  }, []);
 
-class CardapioComponent extends Component {
-    constructor(props) {
-        super(props)
+  function Teste() {
+    return (
+      <>
+        {categorias.map((categoria) => (
+          <CategoriaComponent key={categoria.id} nome={categoria.nome}>
+            {produtos.map((prod) => {
+              if (categoria.id == prod.categoriaProduto.id) {
+                return (
+                  <ItemCategoriaComponent
+                    key={prod.id}
+                    nome={prod.nome}
+                    descricao={prod.descricao}
+                    preco={prod.preco}
+                  />
+                );
+              }
+            })}
+          </CategoriaComponent>
+        ))}
+      </>
+    );
+  }
 
-        this.state = {
-            produtos: [],
-            tipoProdutos: []
-        }
-
-        this.Teste = this.Teste.bind(this);
-
-    }
-
-
-    Teste = (props) => {
-        var tipoProdutos = this.state.tipoProdutos;
-        var produtos = this.state.produtos;
-        return (
-            <>
-                {
-                    tipoProdutos.map((tipoProduto) =>
-                        <CategoriaComponent key={tipoProduto.id} nome={tipoProduto.nome}>
-                            {
-                                produtos.map((prod) => {
-                                    if (tipoProduto.id == prod.tipoProduto.id) {
-                                        return <ItemCategoriaComponent nome={prod.nome} descricao={prod.descricao} preco={prod.preco} />
-                                    }
-                                })
-
-                            }
-
-                        </CategoriaComponent>
-                    )
-
-                }
-
-
-            </>
-        )
-    }
-
-
-
-    componentDidMount() {
-
-        ProdutoService.getProdutos().then((res) => {
-            console.log(res.data);
-            this.setState({ produtos: res.data });
-        });
-        TipoProdutoService.getTipoProdutos().then((res) => {
-            console.log(res.data);
-            this.setState({ tipoProdutos: res.data });
-        });
-
-
-    }
-
-    render() {
-        return (
-            <div className="container-cardapio">
-                {this.Teste()}
-            </div>
-        );
-    }
-}
+  return <div className="container-cardapio">{<Teste />}</div>;
+};
 
 export default CardapioComponent;

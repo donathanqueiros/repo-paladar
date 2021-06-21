@@ -11,104 +11,122 @@ import java.util.List;
 @Entity
 @Table(name = "PEDIDOS")
 public class Pedido {
+	@Deprecated
+	public Pedido() {
+	}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDPEDIDOS")
-    private Long id;
+	public Pedido(Cliente cliente, List<Produto> listaProdutos, String observacao) {
+		this.cliente = cliente;
+		this.produtos = listaProdutos;
+		this.data = new Date();
+		this.status = StatusPedido.PENDENTE;
+	}
 
-    @Column(name = "STATUS")
-    @Enumerated(EnumType.STRING)
-    private StatusPedido status;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "IDPEDIDOS")
+	private Long id;
 
-    @Column(name = "DATA")
-    private Date data;
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.STRING)
+	private StatusPedido status;
 
-    @ManyToOne()
-    @JoinColumn(name = "ID_CLIENTE")
-    private Cliente cliente;
+	public String getObservacao() {
+		return observacao;
+	}
 
-    @ManyToOne()
-    @JoinColumn(name = "ID_FORMA_PEDIDO")
-    private FormaPedido formaPedido;
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
-    @ManyToOne()
-    @JoinColumn(name = "ID_TIPO_PAGAMENTO")
-    private TipoPagamento tipoPagamento;
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
 
-    @Column(name = "TOTAL")
-    private double Total;
+	@Column(name = "DATA")
+	private Date data;
 
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "OBSERVACAO")
+	private String observacao;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "TOTAL")
+	private double Total;
 
-    public StatusPedido getStatus() {
-        return status;
-    }
+	@ManyToOne()
+	@JoinColumn(name = "ID_CLIENTE")
+	private Cliente cliente;
 
-    public void setStatus(StatusPedido status) {
-        this.status = status;
-    }
+	@ManyToOne()
+	@JoinColumn(name = "ID_FORMA_PEDIDO")
+	private FormaPedido formaPedido;
 
-    public Date getData() {
-        return data;
-    }
+	@ManyToOne()
+	@JoinColumn(name = "ID_TIPO_PAGAMENTO")
+	private TipoPagamento tipoPagamento;
 
-    public void setData(Date data) {
-        this.data = data;
-    }
+	@ManyToMany
+	@JoinTable(name = "PEDIDO_HAS_PRODUTO", joinColumns = { @JoinColumn(name = "IDCLIENTE") }, inverseJoinColumns = {
+			@JoinColumn(name = "IDPRODUTO") })
+	private List<Produto> produtos = new ArrayList<>();
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public FormaPedido getFormaPedido() {
-        return formaPedido;
-    }
+	public StatusPedido getStatus() {
+		return status;
+	}
 
-    public void setFormaPedido(FormaPedido formaPedido) {
-        this.formaPedido = formaPedido;
-    }
+	public void setStatus(StatusPedido status) {
+		this.status = status;
+	}
 
-    public TipoPagamento getTipoPagamento() {
-        return tipoPagamento;
-    }
+	public Date getData() {
+		return data;
+	}
 
-    public void setTipoPagamento(TipoPagamento tipoPagamento) {
-        this.tipoPagamento = tipoPagamento;
-    }
+	public void setData(Date data) {
+		this.data = data;
+	}
 
-    public double getTotal() {
-        return Total;
-    }
+	public Cliente getCliente() {
+		return cliente;
+	}
 
-    public void setTotal(double total) {
-        Total = total;
-    }
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
 
-    public List<Produto> getProdutos() {
-        return produtos;
-    }
+	public FormaPedido getFormaPedido() {
+		return formaPedido;
+	}
 
-    @ManyToMany
-    @JoinTable(name = "PEDIDO_HAS_PRODUTO", joinColumns =
-            {@JoinColumn(name = "IDCLIENTE")}, inverseJoinColumns =
-            {@JoinColumn(name = "IDPRODUTO")})
-    private final List<Produto> produtos = new ArrayList<>();
+	public void setFormaPedido(FormaPedido formaPedido) {
+		this.formaPedido = formaPedido;
+	}
 
-    public Pedido(Cliente cliente) {
-        this.cliente = cliente;
-        this.data = new Date();
-        this.status = StatusPedido.PENDENTE;
-    }
+	public TipoPagamento getTipoPagamento() {
+		return tipoPagamento;
+	}
+
+	public void setTipoPagamento(TipoPagamento tipoPagamento) {
+		this.tipoPagamento = tipoPagamento;
+	}
+
+	public double getTotal() {
+		return Total;
+	}
+
+	public void setTotal(double total) {
+		Total = total;
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
 
 }

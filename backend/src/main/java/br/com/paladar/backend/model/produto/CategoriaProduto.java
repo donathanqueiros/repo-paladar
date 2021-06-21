@@ -1,29 +1,39 @@
 package br.com.paladar.backend.model.produto;
 
-import br.com.paladar.backend.model.produto.ItemCategoriaProduto;
-import br.com.paladar.backend.model.produto.Produto;
+import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Entity
+@Table(name = "CATEGORIA_PRODUTO")
 public class CategoriaProduto {
-    private Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDCATEGORIA_PRODUTO")
+    private long id;
+
+    @Column(name = "NOME")
     private String nome;
-    private String obrigatorio;
-    private int quantidadeMax;
 
-    private List<ItemCategoriaProduto> itemCategoriaProdutoList = new ArrayList<>();
-    private Produto produto;
-
-
-    public CategoriaProduto() {
-
+    public long getId() {
+        return id;
     }
 
-    public CategoriaProduto(Produto produto, String nome, String obrigatorio, int quantidadeMax) {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
         this.nome = nome;
-        this.obrigatorio = obrigatorio;
-        this.quantidadeMax = quantidadeMax;
-        this.produto = produto;
+    }
+
+    public CategoriaProduto() {
+    }
+
+    public CategoriaProduto(String nome) {
+        this.nome = nome;
     }
 }
