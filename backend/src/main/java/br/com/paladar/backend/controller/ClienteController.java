@@ -1,73 +1,63 @@
 package br.com.paladar.backend.controller;
 
-import br.com.paladar.backend.exception.ResourceNotFoundException;
-import br.com.paladar.backend.model.cliente.Cliente;
-import br.com.paladar.backend.repository.cliente.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.paladar.backend.controller.dto.cliente.ClienteDTO;
+import br.com.paladar.backend.controller.form.cliente.ClienteForm;
+import br.com.paladar.backend.exception.ObjetoJaExisteException;
+import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
+import br.com.paladar.backend.services.ClienteService;
+import lombok.AllArgsConstructor;
+
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/clientes")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteController {
 
-	@Autowired
-	private ClienteRepository clienteRepository;
 
-	// get all clientes
-	@GetMapping("/clientes")
-	public List<Cliente> getAllClientes() {
-		return clienteRepository.findAll();
+	private ClienteService clienteService;
+
+	@GetMapping
+	public List<ClienteDTO> todosClientes() {
+		return clienteService.todosClientes();
 	}
 
-	// create cliente rest api
-	@PostMapping("/clientes")
-	public Cliente createCliente(@RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ClienteDTO criarCliente(@RequestBody @Valid ClienteForm cliente) throws ObjetoJaExisteException {
+		return clienteService.criarCliente(cliente);
 	}
 
-	// get cliente by id rest api
-	@GetMapping("/clientes/{id}")
-	public ResponseEntity<Cliente> GetClienteById(@PathVariable Long id) {
-
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Cliente not exist with id: " + id));
-
-		return ResponseEntity.ok(cliente);
+	@GetMapping("/{id}")
+	public ClienteDTO buscarPorId(@PathVariable Long id) throws ObjetoNaoEncotradoException {
+		return clienteService.buscarPorId(id);
 	}
 
-	// update cliente rest api
-	@PutMapping("/clientes/{id}")
-	public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente clienteDetails) {
+	@PutMapping("/{id}")
+	public ClienteDTO atualizarCliente(@PathVariable Long id, @RequestBody @Valid ClienteDTO cliente)
+			throws ObjetoNaoEncotradoException {
 
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Cliente not exist with id: " + id));
-
-		// TODO
-		// cliente.setFirstName(clienteDetails.getFirstName());
-		// cliente.setLastName(clienteDetails.getLastName());
-		// cliente.setEmailId(clienteDetails.getEmailId());
-
-		Cliente updateCliente = clienteRepository.save(cliente);
-
-		return ResponseEntity.ok(updateCliente);
+		return clienteService.atualizarCliente(id, cliente);
 	}
 
-	// delete cliente rest api
-	@DeleteMapping("/clientes/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteCliente(@PathVariable Long id) {
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Cliente not exist with id: " + id));
-
-		clienteRepository.delete(cliente);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletarPorId(@PathVariable Long id) throws ObjetoNaoEncotradoException {
+		clienteService.deletarPorId(id);
 
 	}
 

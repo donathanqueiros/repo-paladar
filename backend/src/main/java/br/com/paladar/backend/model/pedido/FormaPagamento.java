@@ -2,35 +2,25 @@ package br.com.paladar.backend.model.pedido;
 
 import javax.persistence.*;
 
+import br.com.paladar.backend.model.produto.CategoriaProduto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "TIPO_PAGAMENTO")
-public class TipoPagamento {
+@Table(name = "FORMA_PAGAMENTO")
+public class FormaPagamento {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDTIPO_PAGAMENTO")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "IDFORMA_PAGAMENTO")
+	private Long id;
 
-    @Column(name = "NOME")
-    private String nome;
+	private String nome;
 
-    public TipoPagamento(String nome) {
-        this.nome = nome;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }

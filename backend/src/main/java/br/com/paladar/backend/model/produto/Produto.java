@@ -1,81 +1,44 @@
 package br.com.paladar.backend.model.produto;
 
-import javax.persistence.*;
+import java.math.BigDecimal;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "PRODUTOS")
 public class Produto {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDPRODUTOS")
-    private long id;
+	@Column(nullable = false, unique = true)
+	private String nome;
 
-    @Column(name = "NOME")
-    private String nome;
+	@Column(nullable = false)
+	private String descricao;
 
-    @Column(name = "DESCRICAO")
-    private String descricao;
+	@Column(nullable = false)
+	private BigDecimal preco;
 
-    @Column(name = "PRECO")
-    private double preco;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "ID_CATEGORIA_PRODUTO")
+	private CategoriaProduto categoriaProduto;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_CATEGORIA_PRODUTO")
-    private CategoriaProduto categoriaProduto;
-
-
-    public Produto() {
-
-    }
-
-    public Produto(String nome, String descricao, double preco, CategoriaProduto categoriaProduto) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.categoriaProduto = categoriaProduto;
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public CategoriaProduto getCategoriaProduto() {
-        return categoriaProduto;
-    }
-
-    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
-        this.categoriaProduto = categoriaProduto;
-    }
 }

@@ -1,74 +1,60 @@
 package br.com.paladar.backend.controller;
 
-import br.com.paladar.backend.exception.ResourceNotFoundException;
-import br.com.paladar.backend.model.produto.CategoriaProduto;
-import br.com.paladar.backend.repository.produto.CategoriaProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.paladar.backend.controller.dto.produto.CategoriaProdutoDTO;
+import br.com.paladar.backend.controller.form.produto.CategoriaProdutoForm;
+import br.com.paladar.backend.exception.ObjetoJaExisteException;
+import br.com.paladar.backend.services.produto.CategoriaProdutoService;
+
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/categoriaproduto")
 public class CategoriaProdutoController {
 
 	@Autowired
-	private CategoriaProdutoRepository categoriaProdutoRepository;
+	private CategoriaProdutoService categoriaProdutoService;
 
-	// get all tipoProdutos
-	@GetMapping("/categoriaproduto")
-	public List<CategoriaProduto> getAllCategoriaProduto() {
-		return categoriaProdutoRepository.findAll();
+	@GetMapping
+	public List<CategoriaProdutoDTO> getAllCategoriaProduto() {
+		return categoriaProdutoService.todosCategoriaProdutos();
 	}
 
-	// create tipoProduto rest api
-	@PostMapping("/categoriaproduto")
-	public CategoriaProduto createCategoriaProduto(@RequestBody CategoriaProduto categoriaProduto) {
-		return categoriaProdutoRepository.save(categoriaProduto);
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public CategoriaProdutoDTO createCategoriaProduto(@RequestBody @Valid CategoriaProdutoForm categoriaProdutoForm)
+			throws ObjetoJaExisteException {
+		return categoriaProdutoService.criarCategoriaProduto(categoriaProdutoForm);
 	}
 
-	// get tipoProduto by id rest api
-	@GetMapping("/categoriaproduto/{id}")
-	public ResponseEntity<CategoriaProduto> GetCategoriaProdutoById(@PathVariable Long id) {
-
-		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("TipoProduto not exist with id: " + id));
-
-		return ResponseEntity.ok(categoriaProduto);
+	@GetMapping("/{id}")
+	public CategoriaProdutoDTO GetCategoriaProdutoById(@PathVariable Long id) {
+		return categoriaProdutoService.buscarPorId(id);
 	}
 
-	// update tipoProduto rest api
-	@PutMapping("/categoriaproduto/{id}")
-	public ResponseEntity<CategoriaProduto> updateCategoriaProduto(@PathVariable Long id,
-			@RequestBody CategoriaProduto categoriaProdutoDetails) {
-
-		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("TipoProduto not exist with id: " + id));
-
-		// TODO
-		// tipoProduto.setFirstName(tipoProdutoDetails.getFirstName());
-		// tipoProduto.setLastName(tipoProdutoDetails.getLastName());
-		// tipoProduto.setEmailId(tipoProdutoDetails.getEmailId());
-
-		CategoriaProduto updateCategoriaProduto = categoriaProdutoRepository.save(categoriaProduto);
-
-		return ResponseEntity.ok(updateCategoriaProduto);
+	@PutMapping("/{id}")
+	public CategoriaProdutoDTO updateCategoriaProduto(@PathVariable Long id,
+			@RequestBody @Valid CategoriaProdutoForm categoriaProdutoForm) {
+		return categoriaProdutoService.atualizarCategoriaProduto(id, categoriaProdutoForm);
 	}
 
-	// delete tipoProduto rest api
-	@DeleteMapping("/categoriaproduto/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteCategoriaProduto(@PathVariable Long id) {
-		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("TipoProduto not exist with id: " + id));
-
-		categoriaProdutoRepository.delete(categoriaProduto);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteCategoriaProduto(@PathVariable Long id) {
+		categoriaProdutoService.deletarPorId(id);
 
 	}
 

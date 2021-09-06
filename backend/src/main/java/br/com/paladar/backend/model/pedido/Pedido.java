@@ -1,132 +1,95 @@
 package br.com.paladar.backend.model.pedido;
 
-import br.com.paladar.backend.model.cliente.Cliente;
-import br.com.paladar.backend.model.produto.Produto;
+import static br.com.paladar.backend.model.pedido.StatusPedido.CANCELADO;
+import static br.com.paladar.backend.model.pedido.StatusPedido.ENTREGUE;
+import static br.com.paladar.backend.model.pedido.StatusPedido.PENDENTE;
+import static br.com.paladar.backend.model.pedido.StatusPedido.PRONTO;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import br.com.paladar.backend.exception.PedidoImpossivelDespacharException;
+import br.com.paladar.backend.exception.PedidoJaCanceladoException;
+import br.com.paladar.backend.model.cliente.Cliente;
+import br.com.paladar.backend.model.produto.Produto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "PEDIDOS")
 public class Pedido {
-	@Deprecated
-	public Pedido() {
-	}
-
-	public Pedido(Cliente cliente, List<Produto> listaProdutos, String observacao) {
-		this.cliente = cliente;
-		this.produtos = listaProdutos;
-		this.data = new Date();
-		this.status = StatusPedido.PENDENTE;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "IDPEDIDOS")
-	private Long id;
+	private Long idPedido;
 
-	@Column(name = "STATUS")
 	@Enumerated(EnumType.STRING)
-	private StatusPedido status;
-
-	public String getObservacao() {
-		return observacao;
-	}
-
-	public void setObservacao(String observacao) {
-		this.observacao = observacao;
-	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
-	}
-
-	@Column(name = "DATA")
-	private Date data;
-
-	@Column(name = "OBSERVACAO")
+	@Builder.Default
+	private StatusPedido status = PENDENTE;
+	private Boolean entrega;
 	private String observacao;
-
-	@Column(name = "TOTAL")
-	private double Total;
+	private BigDecimal total;
+	@Builder.Default
+	private LocalDateTime dataInicioPedido = LocalDateTime.now();
+	private LocalDateTime dataFimPedido;
 
 	@ManyToOne()
-	@JoinColumn(name = "ID_CLIENTE")
+	@JoinColumn(name = "ID_CLIENTE", nullable = false)
 	private Cliente cliente;
 
 	@ManyToOne()
-	@JoinColumn(name = "ID_FORMA_PEDIDO")
-	private FormaPedido formaPedido;
+	@JoinColumn(name = "ID_TIPO_PEDIDO")
+	private TipoPedido tipoPedido;
 
 	@ManyToOne()
-	@JoinColumn(name = "ID_TIPO_PAGAMENTO")
-	private TipoPagamento tipoPagamento;
+	@JoinColumn(name = "ID_FORMA_PAGAMENTO")
+	private FormaPagamento formaPagamento;
 
 	@ManyToMany
-	@JoinTable(name = "PEDIDO_HAS_PRODUTO", joinColumns = { @JoinColumn(name = "IDCLIENTE") }, inverseJoinColumns = {
+	@JoinTable(name = "PEDIDO_POSSUI_PRODUTO", joinColumns = { @JoinColumn(name = "IDCLIENTE") }, inverseJoinColumns = {
 			@JoinColumn(name = "IDPRODUTO") })
-	private List<Produto> produtos = new ArrayList<>();
+	private List<Produto> produtos;
 
-	public Long getId() {
-		return id;
+	public void despachar() throws PedidoImpossivelDespacharException {
+		if (status.equals(PRONTO) && !entrega) {
+			this.status = ENTREGUE;
+		} else {
+			this.status = status.despachar();
+		}
+		verificaSePedidoFoiEntregue(this);
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	private void verificaSePedidoFoiEntregue(Pedido pedido) {
+		if (pedido.getStatus().equals(ENTREGUE)) {
+			pedido.setDataFimPedido(LocalDateTime.now());
+		}
 	}
 
-	public StatusPedido getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusPedido status) {
-		this.status = status;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public FormaPedido getFormaPedido() {
-		return formaPedido;
-	}
-
-	public void setFormaPedido(FormaPedido formaPedido) {
-		this.formaPedido = formaPedido;
-	}
-
-	public TipoPagamento getTipoPagamento() {
-		return tipoPagamento;
-	}
-
-	public void setTipoPagamento(TipoPagamento tipoPagamento) {
-		this.tipoPagamento = tipoPagamento;
-	}
-
-	public double getTotal() {
-		return Total;
-	}
-
-	public void setTotal(double total) {
-		Total = total;
-	}
-
-	public List<Produto> getProdutos() {
-		return produtos;
+	public void cancelar() throws PedidoJaCanceladoException {
+		if (this.status == CANCELADO)
+			throw new PedidoJaCanceladoException("Pedido", "id", this.idPedido.toString());
+		this.status = CANCELADO;
 	}
 
 }

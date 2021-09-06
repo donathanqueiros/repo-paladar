@@ -1,9 +1,19 @@
 package br.com.paladar.backend.repository.pedido;
 
-import br.com.paladar.backend.model.cliente.Cliente;
-import br.com.paladar.backend.model.pedido.Pedido;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface PedidoRepository extends JpaRepository<Pedido, Long> {
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
+
+import br.com.paladar.backend.model.pedido.Pedido;
+import br.com.paladar.backend.model.pedido.StatusPedido;
+import br.com.paladar.backend.repository.CustomRepository;
+
+public interface PedidoRepository extends CustomRepository<Pedido, Long> {
+
+	List<Pedido> findByStatus(StatusPedido tipoStatus);
+
+	@Query("SELECT p FROM Pedido p WHERE p.status != 'entregue'")
+	List<Pedido> findAllAndamento(Sort sort);
 
 }

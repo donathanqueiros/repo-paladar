@@ -1,75 +1,63 @@
 package br.com.paladar.backend.controller;
 
-
-import br.com.paladar.backend.exception.ResourceNotFoundException;
-import br.com.paladar.backend.model.produto.Produto;
-import br.com.paladar.backend.repository.produto.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
+import br.com.paladar.backend.controller.form.produto.ProdutoForm;
+import br.com.paladar.backend.exception.ObjetoJaExisteException;
+import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
+import br.com.paladar.backend.model.produto.Produto;
+import br.com.paladar.backend.services.produto.ProdutoService;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/produtos")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+	@Autowired
+	private ProdutoService produtoService;
 
-    // get all produtos
-    @GetMapping("/produtos")
-    public List<Produto> getAllProdutos() {
-        return produtoRepository.findAll();
-    }
+	@GetMapping
+	public List<ProdutoDTO> getAllProdutos() {
+		return produtoService.todosProdutos();
+	}
 
-    // create produto rest api
-    @PostMapping("/produtos")
-    public Produto createProduto(@RequestBody Produto produto) {
-        return produtoRepository.save(produto);
-    }
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ProdutoDTO createProduto(@RequestBody ProdutoForm produto) throws ObjetoJaExisteException {
+		return produtoService.criarProduto(produto);
+	}
 
-    // get produto by id rest api
-    @GetMapping("/produtos/{id}")
-    public ResponseEntity<Produto> GetProdutoById(@PathVariable Long id) {
+	@GetMapping("/{id}")
+	public ProdutoDTO GetProdutoById(@PathVariable Long id) {
+		return produtoService.buscarPorId(id);
+	}
 
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto not exist with id: " + id));
+	@PutMapping("/{id}")
+	public ProdutoDTO updateProduto(@PathVariable Long id, @RequestBody ProdutoForm produtoForm) {
+		return produtoService.atualizarProduto(id, produtoForm);
+	}
 
-        return ResponseEntity.ok(produto);
-    }
-
-    // update produto rest api
-    @PutMapping("/produtos/{id}")
-    public ResponseEntity<Produto> updateProduto(@PathVariable Long id, @RequestBody Produto produtoDetails) {
-
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto not exist with id: " + id));
-
-        //TODO
-//        produto.setFirstName(produtoDetails.getFirstName());
-//        produto.setLastName(produtoDetails.getLastName());
-//        produto.setEmailId(produtoDetails.getEmailId());
-
-        Produto updateProduto = produtoRepository.save(produto);
-
-        return ResponseEntity.ok(updateProduto);
-    }
-
-    // delete produto rest api
-    @DeleteMapping("/produtos/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteProduto(@PathVariable Long id) {
-        Produto produto = produtoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto not exist with id: " + id));
-
-        produtoRepository.delete(produto);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
-
-    }
-
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteProduto(@PathVariable Long id) {
+		produtoService.deletarPorId(id);
+	}
 
 }

@@ -1,9 +1,14 @@
 package br.com.paladar.backend.repository.pedido;
 
-import br.com.paladar.backend.model.cliente.Cliente;
-import br.com.paladar.backend.model.pedido.FormaPedido;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FormaPedidoRepository extends JpaRepository<FormaPedido, Long> {
+import br.com.paladar.backend.model.pedido.TipoPedido;
+import br.com.paladar.backend.services.TipoPedidoService;
+
+public interface TipoPedidoRepository extends JpaRepository<TipoPedido, Long> {
+
+	Optional<TipoPedido> findByNome(String nome);
 
 }
