@@ -2,9 +2,9 @@ import React from "react";
 import logo from "../../assets/img/logo.png";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import carrinho from "../../assets/img/carrinho.png";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Image, Row } from "react-bootstrap";
 
-const HeaderComponent = ({ teste }) => {
+const HeaderComponent = ({ modalCarrinho }) => {
   const { red, yellow } = colors;
   const { insani } = fontFamily;
   const { big } = fontSize;
@@ -20,7 +20,7 @@ const HeaderComponent = ({ teste }) => {
   };
 
   return (
-    <header onClick={teste} style={styleHeader}>
+    <header style={styleHeader}>
       <Container style={styleContent} fluid>
         <Row>
           <Col
@@ -37,8 +37,8 @@ const HeaderComponent = ({ teste }) => {
               CARDAPIO
             </span>
           </Col>
-          <Col md="4" className="d-flex justify-content-end align-items-center">
-            <img src={carrinho}></img>
+          <Col md="4" className="d-flex justify-content-end align-items-center ">
+            <Image src={carrinho} className="cursor-pointer" onClick={() => modalCarrinho()} ></Image>
           </Col>
         </Row>
       </Container>

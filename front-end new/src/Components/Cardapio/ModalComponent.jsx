@@ -56,12 +56,12 @@ const ModalComponent = ({
     lineHeight: "24px",
   };
 
-  const onHideHandler = (e) => {
-    var modal = document.getElementById("modal");
-    var ev = e || window.event;
-    if (e.target !== modal) return;
-    return onHide();
-  };
+  // const onHideHandler = (e) => {
+  //   var modal = document.getElementById("modal");
+  //   var ev = e || window.event;
+  //   if (e.target !== modal) return;
+  //   return onHide();
+  // };
 
   useEffect(() => {
     let { display } = modalStyleDefault;
@@ -71,7 +71,7 @@ const ModalComponent = ({
 
   return (
     <div
-      onClick={onHideHandler}
+      // onClick={onHideHandler}
       id="modal"
       style={Object.assign(modalStyleDefault, styleModal)}
     >

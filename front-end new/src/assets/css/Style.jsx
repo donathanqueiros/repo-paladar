@@ -5,7 +5,7 @@ const fontSize = {
   big: { fontSize: "48px" },
 };
 const fontFamily = {
-  insani: { fontFamily: "Insaniburger" },
+  insani: { fontFamily: "Insanibu" },
 
   mont: { fontFamily: "'Montserrat', sans-serif" },
 };

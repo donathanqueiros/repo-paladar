@@ -4,7 +4,7 @@ import Menos from "../../assets/img/menos.svg";
 import Mais from "../../assets/img/mais.svg";
 import { colors, fontFamily } from "../../assets/css/Style";
 
-const BotaoCardComponent = () => {
+const BotaoCardComponent = ({ style, qtd, increment, decrement }) => {
   const [quantidade, setQuantidade] = useState(0);
   const { black } = colors;
   const { mont } = fontFamily;
@@ -39,25 +39,26 @@ const BotaoCardComponent = () => {
     backgroundColor: "#FF0000",
   };
 
-  const adicionar = () => setQuantidade(quantidade + 1);
-  const remover = () => quantidade > 0 && setQuantidade(quantidade - 1);
-
   return (
-    <div style={geralStyle} className="d-flex flex-row">
+    <div
+      id="botao-card"
+      style={{ ...geralStyle, ...style }}
+      className="d-flex flex-row"
+    >
       <div
         style={menosStyle}
         className="justify-content-center text-center"
-        onClick={remover}
+        onClick={decrement}
       >
         <Image src={Menos}></Image>
       </div>
       <div style={numeroStyle} className="justify-content-center text-center">
-        <span>{quantidade}</span>
+        <span>{qtd}</span>
       </div>
       <div
         style={maisStyle}
         className="justify-content-center text-center"
-        onClick={adicionar}
+        onClick={increment}
       >
         <Image src={Mais}></Image>
       </div>

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { colors, fontFamily } from "../../assets/css/Style";
 import InputMask from "react-input-mask";
 import axios from "axios";
+import iconFechar from "../../assets/img/fechar.png";
+import iconVoltar from "../../assets/img/voltar.png";
 
-const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
+const FinalizarCompraComponent = ({
+  carrinho,
+  frete,
+  closeModal,
+  voltarCarrinho,
+}) => {
+  const [errors, setErrors] = useState({});
   const [cepValido, setCepValido] = useState(false);
-  const [cliente, setCliente] = useState({
+  const [pedido, setPedido] = useState({
     nome: "",
     telefone: "",
     email: "",
@@ -17,57 +25,86 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
       bairro: "",
       cidade: "",
     },
-    carrinho: { ...carrinho },
+    carrinho: carrinho.map((prod) => {
+      return { id: prod.id };
+    }),
+    frete: frete,
   });
 
   const saveProduto = () => {
-    console.log(`produto => ${JSON.stringify(cliente)}`);
+    console.log(`produto => ${JSON.stringify(pedido)}`);
   };
 
   const handleProdutoChange = (e, isEndereco) => {
     let { name, value } = e.target;
-    let { endereco } = cliente;
+    let { endereco } = pedido;
 
     if (isEndereco) {
       endereco[name] = value;
-      setCliente((prevState) => ({
+      setPedido((prevState) => ({
         ...prevState,
         endereco,
       }));
     } else {
-      setCliente((prevState) => ({
+      setPedido((prevState) => ({
         ...prevState,
         [name]: value,
       }));
     }
+
+    if (!!errors[name])
+      setErrors({
+        ...errors,
+        [name]: null,
+      });
   };
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    form.checkValidity();
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // get our new errors
+    const newErrors = findFormErrors();
+    // Conditional logic:
+    if (Object.keys(newErrors).length > 0) {
+      // We got errors!
+      setErrors(newErrors);
     } else {
-      saveProduto();
-
-      // console.log(`produto => ${JSON.stringify(cliente)}`);
-      event.preventDefault();
-      closeModal();
+      // No errors! Put any logic here for the form submission!
+      alert(JSON.stringify(pedido));
     }
+
+    // if (form.checkValidity() === false) {
+    //   alert("nao valido");
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    // } else {
+    //   event.preventDefault();
+    // }
+
+    // const form = event.currentTarget;
+    // form.checkValidity();
+
+    // if (form.checkValidity() === false) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    // } else {
+    //   saveProduto();
+
+    //   // console.log(`produto => ${JSON.stringify(cliente)}`);
+
+    // closeModal();
+    // }
   };
   const complementarCEP = () => {
-    let { cep } = cliente.endereco;
+    let { cep } = pedido.endereco;
     if (cep.replace(/_/g, "").length == 9) {
       axios
         .get("https://brasilapi.com.br/api/cep/v1/" + cep)
         .then(({ data }) => {
-          let { endereco } = cliente;
+          let { endereco } = pedido;
           endereco.bairro = data.neighborhood;
           endereco.cidade = data.city;
           endereco.logradouro = `${data.street} - ${data.city}`;
-          setCliente((prevState) => ({
+          setPedido((prevState) => ({
             ...prevState,
             endereco,
           }));
@@ -75,11 +112,11 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
         })
         .catch(() => {
           setCepValido(false);
-          let { endereco } = cliente;
+          let { endereco } = pedido;
           // endereco.cep = "";
           endereco.bairro = "";
           endereco.logradouro = "";
-          setCliente((prevState) => ({
+          setPedido((prevState) => ({
             ...prevState,
             endereco,
           }));
@@ -87,16 +124,16 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
     } else {
       setCepValido(false);
 
-      let { endereco } = cliente;
+      let { endereco } = pedido;
       endereco.bairro = "";
       endereco.logradouro = "";
-      setCliente((prevState) => ({
+      setPedido((prevState) => ({
         ...prevState,
         endereco,
       }));
     }
   };
-  const [validated, setValidated] = useState(true);
+  const [validated, setValidated] = useState(false);
   const geralStyle = {
     width: "794px",
     backgroundColor: "#FFFFFFF",
@@ -126,7 +163,6 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
     fontSize: "16px",
     fontWeight: "600",
     paddingLeft: "20px",
-    marginBottom: "30px",
     ...mont,
 
     boxShadow: "10px 10px 30px rgba(0, 0, 0, 0.06)",
@@ -142,27 +178,40 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
   };
 
   const tituloStyle = {
-    display: "-webkit-box",
-    WebkitLineClamp: "2",
-    WebkitBoxOrient: "vertical",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    height: "50px",
-    ...black,
     ...insani,
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "24px",
-    lineHeight: "24px",
-    width: "223px",
-    height: "82px",
     fontStyle: "normal",
     fontWeight: "normal",
     fontSize: "36px",
     lineHeight: "41px",
-    textAlign: "center",
     ...red,
+    textAlign: "center",
   };
+
+  const findFormErrors = () => {
+    const { nome, telefone, email } = pedido;
+    const { numero } = pedido.endereco;
+
+    const newErrors = {};
+    // name errors
+    if (!nome || nome === "") newErrors.nome = "Não pode ser vazio!";
+    else if (nome.length < 2) newErrors.nome = "Nome é muito curto";
+
+    if (telefone.replace(/_g/).length != 15)
+      newErrors.telefone = "Celular invalido";
+
+    if (!validateEmail(email)) newErrors.email = "Email Invalído";
+
+    if (!cepValido) newErrors.cep = "CEP Invalído";
+
+    if (!numero || numero === "") newErrors.numero = "Não pode ser vazio!";
+
+    return newErrors;
+  };
+
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
 
   const botaoFinalizar = () => {
     return (
@@ -205,11 +254,38 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
           boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
           borderRadius: "80px 80px 0px 0px",
         }}
-        className="d-flex justify-content-around"
+        className="d-flex flex-row align-items-center justify-content-around"
       >
-        <span style={tituloStyle}>Finalizar Pedido</span>
+        <div onClick={voltarCarrinho}>
+          <Image
+            style={{
+              width: "42px",
+              height: "42px",
+              cursor: "pointer",
+            }}
+            src={iconVoltar}
+          />
+        </div>
+        <div>
+          <span style={tituloStyle}>
+            Finalizar <br />
+            Pedido
+          </span>
+        </div>
+        <div onClick={closeModal}>
+          <Image
+            style={{
+              width: "42px",
+              height: "42px",
+              cursor: "pointer",
+            }}
+            src={iconFechar}
+          />
+        </div>
       </header>
-      <body style={{ padding: "24px 0", width: "100%" }}>
+      <main
+        style={{ padding: "24px 0", width: "100%", backgroundColor: "white" }}
+      >
         <div
           style={{
             margin: "auto",
@@ -220,68 +296,57 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
           <Container>
             <Form onSubmit={handleSubmit}>
               <Form.Group>
-                <Form.Label style={subtituloStyle}>Informações</Form.Label>
-                <Form.Control
-                  style={campo}
-                  required
-                  value={cliente.nome}
-                  onChange={handleProdutoChange}
-                  name="nome"
-                  type="text"
-                  placeholder="Nome"
-                  isInvalid={cliente.nome.length < 3}
-                  isValid={cliente.nome.length > 3}
-                />
-
+                <Form.Group style={{ marginBottom: "30px" }}>
+                  <Form.Label style={subtituloStyle}>Informações</Form.Label>
+                  <Form.Control
+                    style={campo}
+                    value={pedido.nome}
+                    onChange={handleProdutoChange}
+                    name="nome"
+                    type="text"
+                    placeholder="Nome"
+                    isInvalid={!!errors.nome}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.nome}
+                  </Form.Control.Feedback>
+                </Form.Group>
                 <InputMask
                   mask="(99) 99999-9999"
-                  value={cliente.telefone}
+                  value={pedido.telefone}
                   onChange={handleProdutoChange}
                 >
                   {(inputProps) => (
-                    <Form.Control
-                      {...inputProps}
-                      style={campo}
-                      value={cliente.telefone}
-                      name="telefone"
-                      type="tel"
-                      placeholder="telefone"
-                      required
-                      isValid={cliente.telefone.replace(/_/g, "").length === 15}
-                      isInvalid={
-                        !(cliente.telefone.replace(/_/g, "").length === 15)
-                      }
-                    />
+                    <Form.Group style={{ marginBottom: "30px" }}>
+                      <Form.Control
+                        {...inputProps}
+                        style={campo}
+                        value={pedido.telefone}
+                        name="telefone"
+                        type="tel"
+                        placeholder="Celular"
+                        isInvalid={!!errors.telefone}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.telefone}
+                      </Form.Control.Feedback>
+                    </Form.Group>
                   )}
                 </InputMask>
-                <Form.Control
-                  style={campo}
-                  required
-                  value={cliente.email}
-                  onChange={handleProdutoChange}
-                  onBlur={() => {
-                    let { email } = cliente;
-                    email = email.trim();
-                    console.log(email);
-                    setCliente((prevState) => ({
-                      ...prevState,
-                      email,
-                    }));
-                  }}
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  isValid={
-                    cliente.email.includes("@") &&
-                    cliente.email.includes(".") &&
-                    !cliente.email.includes(" ")
-                  }
-                  isInvalid={
-                    !cliente.email.includes("@") ||
-                    !cliente.email.includes(".") ||
-                    cliente.email.includes(" ")
-                  }
-                />
+                <Form.Group style={{ marginBottom: "30px" }}>
+                  <Form.Control
+                    style={campo}
+                    value={pedido.email}
+                    onChange={handleProdutoChange}
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
               </Form.Group>
               <Form.Group>
                 <Form.Label style={subtituloStyle}>Endereço</Form.Label>
@@ -290,20 +355,24 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
                   <Col>
                     <InputMask
                       mask="99999-999"
-                      value={cliente.endereco.cep}
+                      value={pedido.endereco.cep}
                       onChange={(e) => handleProdutoChange(e, true)}
                       onBlur={complementarCEP}
                     >
                       {(inputProps) => (
-                        <Form.Control
-                          {...inputProps}
-                          style={campo}
-                          name="cep"
-                          type="text"
-                          placeholder="CEP"
-                          isValid={cepValido}
-                          isInvalid={!cepValido}
-                        />
+                        <Form.Group>
+                          <Form.Control
+                            {...inputProps}
+                            style={campo}
+                            name="cep"
+                            type="text"
+                            placeholder="CEP"
+                            isInvalid={!!errors.cep}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.cep}
+                          </Form.Control.Feedback>
+                        </Form.Group>
                       )}
                     </InputMask>
                   </Col>
@@ -311,27 +380,33 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
                   <Col>
                     <InputMask
                       mask="999999"
-                      value={cliente.endereco.numero}
+                      value={pedido.endereco.numero}
                       onChange={(e) => handleProdutoChange(e, true)}
                       maskChar=""
                     >
                       {(inputProps) => (
-                        <Form.Control
-                          {...inputProps}
-                          style={campo}
-                          name="numero"
-                          type="text"
-                          placeholder="Numero"
-                        />
+                        <Form.Group>
+                          <Form.Control
+                            {...inputProps}
+                            style={campo}
+                            name="numero"
+                            type="text"
+                            placeholder="Numero"
+                            isInvalid={!!errors.numero}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.numero}
+                          </Form.Control.Feedback>
+                        </Form.Group>
                       )}
                     </InputMask>
                   </Col>
                 </Row>
 
                 <Form.Control
-                  style={campo}
+                  style={{ ...campo, marginBottom: "30px" }}
                   name="logradouro"
-                  value={cliente.endereco.logradouro}
+                  value={pedido.endereco.logradouro}
                   onChange={(e) => handleProdutoChange(e, true)}
                   type="text"
                   placeholder="Rua / Avenida"
@@ -340,7 +415,7 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
                 <Form.Control
                   style={campo}
                   name="bairro"
-                  value={cliente.endereco.bairro}
+                  value={pedido.endereco.bairro}
                   onChange={(e) => handleProdutoChange(e, true)}
                   type="text"
                   placeholder="Bairro"
@@ -352,7 +427,7 @@ const FinalizarCompraComponent = ({ carrinho, closeModal }) => {
             </Form>
           </Container>
         </div>
-      </body>
+      </main>
 
       <footer
         style={{

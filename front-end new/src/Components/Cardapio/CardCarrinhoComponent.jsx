@@ -3,9 +3,9 @@ import { Image } from "react-bootstrap";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import BotaoCardComponent from "./BotaoCardComponent";
 
-const CardCarrinhoComponent = ({ titulo, preco, src }) => {
+const CardCarrinhoComponent = ({ titulo, preco, src, qtd, add, remove }) => {
   const { mont } = fontFamily;
-  const { small } = fontSize;
+  const { small, big, medium } = fontSize;
   const { red, black } = colors;
 
   const cardStyle = {
@@ -22,8 +22,7 @@ const CardCarrinhoComponent = ({ titulo, preco, src }) => {
     marginLeft: "8px",
     marginTop: "8px",
     marginRight: "8px",
-    width: "200px",
-    height: "180px",
+    width: "100%",
   };
   const imgStyle = {
     width: "138px",
@@ -31,18 +30,18 @@ const CardCarrinhoComponent = ({ titulo, preco, src }) => {
   };
   const tituloStyle = {
     display: "-webkit-box",
-    WebkitLineClamp: "1",
+    WebkitLineClamp: "2",
     WebkitBoxOrient: "vertical",
     textOverflow: "ellipsis",
     overflow: "hidden",
-    width: "420px",
-    height: "44px",
+    width: "100%",
     fontWeight: 700,
-    lineHeight: "20px",
+    lineHeight: "28px",
     ...black,
     ...mont,
-    fontSize: "20px",
+    ...small,
     fontStyle: "normal",
+    marginTop: "8px",
   };
 
   const precoStyle = {
@@ -50,24 +49,32 @@ const CardCarrinhoComponent = ({ titulo, preco, src }) => {
     fontStyle: "normal",
     fontWeight: "bold",
     ...small,
-    lineHeight: "29px",
+    lineHeight: "24px",
     ...red,
   };
 
   return (
     <div style={cardStyle} className="d-flex flex-row">
       <Image style={imgStyle} src={src}></Image>
-      <div style={textStyle} className="flex-col ">
+      <div
+        style={textStyle}
+        className="d-flex flex-column justify-content-between"
+      >
         <span style={tituloStyle}>{titulo}</span>
         <div
-          style={{ paddingTop: "8px" }}
+          style={{ paddingTop: "8px", marginBottom: "8px" }}
           className="d-flex flex-row justify-content-between align-items-end"
         >
           <div>
             <span style={precoStyle}>R$ {parseFloat(preco).toFixed(2)}</span>
           </div>
           <div>
-            <BotaoCardComponent />
+            <BotaoCardComponent
+              style={{ marginBottom: "4px" }}
+              qtd={qtd}
+              increment={add}
+              decrement={remove}
+            />
           </div>
         </div>
       </div>

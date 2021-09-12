@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "react-bootstrap";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import BotaoCardComponent from "./BotaoCardComponent";
+import CardCompletoComponent from "./CardCompletoComponent";
+import CarrinhoComponent from "./CarrinhoComponent";
+import ModalComponent from "./ModalComponent";
+import $ from "jquery";
 
-const CardGrandeComponent = ({ titulo, subtitulo, preco, src }) => {
+const CardGrandeComponent = ({
+  titulo,
+  subtitulo,
+  preco,
+  src,
+  qtd,
+  add,
+  remove,
+}) => {
   const { mont } = fontFamily;
   const { small } = fontSize;
   const { red, black } = colors;
@@ -62,27 +74,53 @@ const CardGrandeComponent = ({ titulo, subtitulo, preco, src }) => {
     ...red,
   };
 
+  const [showCardCompleto, setShowCardCompleto] = useState(false);
+
+  const produtoDetalhes = () => {
+    setShowCardCompleto(true);
+  };
+
   return (
-    <div style={cardStyle} className="d-flex flex-column">
-      <Image style={imgStyle} src={src}></Image>
-      <div style={{ padding: "0px 16px", paddingTop: "8px" }}>
-        <span style={tituloStyle}>{titulo}</span>
+    <>
+      <div style={cardStyle} className="d-flex flex-column">
+        <Image onClick={produtoDetalhes} style={imgStyle} src={src}></Image>
+        <div
+          onClick={produtoDetalhes}
+          style={{ padding: "0px 8px", paddingTop: "8px" }}
+        >
+          <span style={tituloStyle}>{titulo}</span>
+        </div>
+        <div onClick={produtoDetalhes} style={{ padding: "0px 8px" }}>
+          <span style={subtituloStyle}>{subtitulo}</span>
+        </div>
+        <div
+          style={{ padding: "0px 16px", paddingTop: "8px" }}
+          className="d-flex flex-row justify-content-between align-items-end"
+        >
+          <div>
+            <span style={precoStyle}>R$ {parseFloat(preco).toFixed(2)}</span>
+          </div>
+          <div>
+            <BotaoCardComponent qtd={qtd} increment={add} decrement={remove} />
+          </div>
+        </div>
       </div>
-      <div style={{ padding: "0px 16px" }}>
-        <span style={subtituloStyle}>{subtitulo}</span>
-      </div>
-      <div
-        style={{ padding: "0px 16px", paddingTop: "8px" }}
-        className="d-flex flex-row justify-content-between align-items-end"
+      <ModalComponent
+        // onHide={() => setShowCardCompleto(false)}
+        show={showCardCompleto}
       >
-        <div>
-          <span style={precoStyle}>R$ {parseFloat(preco).toFixed(2)}</span>
-        </div>
-        <div>
-          <BotaoCardComponent />
-        </div>
-      </div>
-    </div>
+        <CardCompletoComponent
+          // closeModal={() => setShowCardCompleto(false)}
+          titulo={titulo}
+          subtitulo={subtitulo}
+          preco={preco}
+          src={src}
+          qtd={qtd}
+          add={add}
+          remove={remove}
+        />
+      </ModalComponent>
+    </>
   );
 };
 

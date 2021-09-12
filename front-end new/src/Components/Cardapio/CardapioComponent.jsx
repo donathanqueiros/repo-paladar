@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import CategoriaComponent from "./CategoriaComponent";
 // import ItemCategoriaComponent from "./ItemCategoriaComponent";
 import LabelComponent from "./LabelComponent";
@@ -8,10 +8,13 @@ import BannerComponent from "./BannerComponent";
 import CardGrandeComponent from "./CardGrandeComponent";
 import CardPequenoComponent from "./CardPequenoComponent";
 import CategoriaComponent from "./CategoriaComponent";
+import data from "../../data.js";
+import ModalComponent from "./ModalComponent";
+import CarrinhoComponent from "./CarrinhoComponent";
 
-const CardapioComponent = () => {
-  // const [produtos, setProdutos] = useState([]);
-  // const [categorias, setCategorias] = useState([]);
+const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
+  const [produtos, setProdutos] = useState(data.produtos);
+  const [categorias, setCategorias] = useState(data.categorias);
 
   // useEffect(() => {
   //   ProdutoService.getProdutos().then((res) => {
@@ -36,63 +39,68 @@ const CardapioComponent = () => {
       "10px 0px 30px rgba(0, 0, 0, 0.25), -10px 0px 30px rgba(0, 0, 0, 0.25)",
   };
 
+  const addCarrinho = (produto) => {
+    setCarrinho([...carrinho, produto]);
+  };
+
+  const removeCarrinho = (produto) => {
+    var idx = carrinho.findIndex((p) => p.id == produto.id);
+    if (idx != -1) {
+      carrinho.splice(idx, 1);
+      setCarrinho([...carrinho]);
+    }
+  };
+
   function Teste() {
     // const handleShow = () => setShow(true);
     return (
-      <body style={{ width: "100%" }}>
+      <main style={{ width: "100%" }}>
         <div style={centroStyle}>
           <LabelComponent texto="Destaques" linha></LabelComponent>
-          <BannerComponent></BannerComponent>
+          <BannerComponent imagens={data.banner}></BannerComponent>
 
-          <CategoriaComponent titulo="Mais Vendidos">
-            <CardGrandeComponent
-              titulo="Coxinha de frango com catupiry e bacon e mussarela e peperoni"
-              subtitulo="Coxinha de frango com catupiry e bacon e mussarela e peperoni Coxinha de frango com catupiry e bacon e mussarela e peperoni Coxinha de frango com catupiry e bacon e mussarela e peperoni Coxinha de frango com catupiry e bacon e mussarela e peperoni Coxinha de frango com catupiry e bacon e mussarela e peperoni"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardGrandeComponent>
-
-            <CardGrandeComponent
-              titulo="Coxinha de frango com catupiry"
-              subtitulo="asdasdasdasdasdasdsada"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardGrandeComponent>
-
-            <CardGrandeComponent
-              titulo="Coxinha de frango com catupiry"
-              subtitulo="asdasdasdasdasdasdsada"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardGrandeComponent>
+          <CategoriaComponent titulo="MAIS VENDIDOS">
+            {data.maisVendidos.map((mv) => {
+              return (
+                <CardGrandeComponent
+                  titulo={mv.titulo}
+                  subtitulo={mv.subtitulo}
+                  preco={mv.preco}
+                  src={mv.src}
+                  qtd={carrinho.filter((valor) => valor.id === mv.id).length}
+                  add={() => addCarrinho(mv)}
+                  remove={() => {
+                    removeCarrinho(mv);
+                  }}
+                />
+              );
+            })}
           </CategoriaComponent>
 
-          <CategoriaComponent>
-            <CardPequenoComponent
-              titulo="Coxinha de frango com catupiry e bacom com cheader"
-              subtitulo="uma coisa de louco que nunca se ve por ai uma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por ai"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardPequenoComponent>
-            <CardPequenoComponent
-              titulo="Coxinha de frango com catupiry e bacom com cheader"
-              subtitulo="uma coisa de louco que nunca se ve por ai uma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por ai"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardPequenoComponent>
-            <CardPequenoComponent
-              titulo="Coxinha de frango com catupiry e bacom com cheader"
-              subtitulo="uma coisa de louco que nunca se ve por ai uma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por ai"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardPequenoComponent>
-            <CardPequenoComponent
-              titulo="Coxinha de frango com catupiry e bacom com cheader"
-              subtitulo="uma coisa de louco que nunca se ve por ai uma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por aiuma coisa de louco que nunca se ve por ai"
-              preco="20"
-              src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
-            ></CardPequenoComponent>
-          </CategoriaComponent>
+          {categorias.map((cat) => {
+            return (
+              <CategoriaComponent titulo={cat.nome}>
+                {produtos.map((prod) => {
+                  if (prod.categoriaProduto === cat.nome) {
+                    return (
+                      <CardPequenoComponent
+                        titulo={prod.titulo}
+                        subtitulo={prod.subtitulo}
+                        preco={prod.preco}
+                        src={prod.src}
+                        qtd={
+                          carrinho.filter((valor) => valor.id === prod.id)
+                            .length
+                        }
+                        add={() => addCarrinho(prod)}
+                        remove={() => removeCarrinho(prod)}
+                      />
+                    );
+                  }
+                })}
+              </CategoriaComponent>
+            );
+          })}
 
           {/* {categorias.map((categoria) => (
             <CategoriaComponent key={categoria.id} nome={categoria.nome}>
@@ -111,11 +119,25 @@ const CardapioComponent = () => {
             </CategoriaComponent>
           ))} */}
         </div>
-      </body>
+      </main>
     );
   }
 
-  return <div className="container-cardapio">{<Teste />}</div>;
+  return (
+    <>
+      <div className="container-cardapio">{<Teste />}</div>
+
+      <ModalComponent onHide={() => {}} show={show}>
+        <CarrinhoComponent
+          carrinho={carrinho}
+          setCarrinho={setCarrinho}
+          closeModal={() => setShow(false)}
+          add={addCarrinho}
+          remove={removeCarrinho}
+        />
+      </ModalComponent>
+    </>
+  );
 };
 
 export default CardapioComponent;
