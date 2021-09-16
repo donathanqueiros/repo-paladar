@@ -12,6 +12,7 @@ import br.com.paladar.backend.controller.form.produto.ProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
 import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
 import br.com.paladar.backend.mapper.ProdutoMapper;
+import br.com.paladar.backend.model.produto.CategoriaProduto;
 import br.com.paladar.backend.model.produto.Produto;
 import br.com.paladar.backend.repository.produto.ProdutoRepository;
 import lombok.AllArgsConstructor;
@@ -42,10 +43,17 @@ public class ProdutoService {
 		return produtoMapper.toDTO(produto);
 	}
 
-	public ProdutoDTO atualizarProduto(Long id, ProdutoForm produto) throws ObjetoNaoEncotradoException {
-		Produto ProdutoEncontrado = verificaSeExiste(id);
-		Produto ProdutoAtualizado = produtoRepository.save(ProdutoEncontrado);
+	public List<ProdutoDTO> buscarPorCategoria(Long id) throws ObjetoNaoEncotradoException {
+		return produtoRepository.findByCategoriaProduto(CategoriaProduto.builder().id(id).build()).stream()
+				.map(produtoMapper::toDTO).collect(Collectors.toList());
+	}
 
+	public ProdutoDTO atualizarProduto(Long id, ProdutoForm produtoForm) throws ObjetoNaoEncotradoException {
+		Produto ProdutoEncontrado = verificaSeExiste(id);
+		Produto produto = produtoMapper.toModel(produtoForm);
+		produto.setId(id);
+		ProdutoEncontrado = produto;
+		Produto ProdutoAtualizado = produtoRepository.save(ProdutoEncontrado);
 		return produtoMapper.toDTO(ProdutoAtualizado);
 	}
 

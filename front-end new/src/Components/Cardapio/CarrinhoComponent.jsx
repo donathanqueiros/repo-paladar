@@ -248,9 +248,9 @@ const CarrinhoComponent = ({ carrinho, closeModal, add, remove }) => {
                 return (
                   <div>
                     <CardCarrinhoComponent
-                      titulo={prod.titulo}
+                      titulo={prod.nome}
                       preco={prod.preco}
-                      src={prod.src}
+                      src={prod.imgProduto.src}
                       qtd={
                         carrinho.filter((valor) => valor.id === prod.id).length
                       }

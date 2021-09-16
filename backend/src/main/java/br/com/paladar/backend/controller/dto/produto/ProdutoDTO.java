@@ -24,4 +24,6 @@ public class ProdutoDTO {
 
 	private CategoriaProduto categoriaProduto;
 
+	private ImgProdutoDTO imgProduto;
+
 }

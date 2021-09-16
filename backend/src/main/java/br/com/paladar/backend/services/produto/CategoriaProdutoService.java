@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.paladar.backend.controller.dto.produto.CategoriaProdutoDTO;
+import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
 import br.com.paladar.backend.controller.form.produto.CategoriaProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
 import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
+import br.com.paladar.backend.exception.ObjetoPossuiRelacionamentoException;
 import br.com.paladar.backend.mapper.CategoriaProdutoMapper;
 import br.com.paladar.backend.model.produto.CategoriaProduto;
 import br.com.paladar.backend.repository.produto.CategoriaProdutoRepository;
@@ -19,6 +21,8 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CategoriaProdutoService {
+
+	private final ProdutoService produtoService;
 
 	private final CategoriaProdutoRepository categoriaProdutoRepository;
 
@@ -45,25 +49,37 @@ public class CategoriaProdutoService {
 	public CategoriaProdutoDTO atualizarCategoriaProduto(Long id, CategoriaProdutoForm categoriaProdutoForm)
 			throws ObjetoNaoEncotradoException {
 		CategoriaProduto CategoriaProdutoEncontrado = verificaSeExiste(id);
+		CategoriaProduto categoria = categoriaProdutoMapper.toModel(categoriaProdutoForm);
+		categoria.setId(id);
+		CategoriaProdutoEncontrado = categoria;
 		CategoriaProduto CategoriaProdutoAtualizado = categoriaProdutoRepository.save(CategoriaProdutoEncontrado);
 
 		return categoriaProdutoMapper.toDTO(CategoriaProdutoAtualizado);
 	}
 
 	public void deletarPorId(Long id) throws ObjetoNaoEncotradoException {
-		verificaSeExiste(id);
+		CategoriaProduto categoria = verificaSeExiste(id);
+		verificaSePossuiDependentes(categoria);
 		categoriaProdutoRepository.deleteById(id);
 	}
 
+	private void verificaSePossuiDependentes(CategoriaProduto categoria) {
+		List<ProdutoDTO> todosProdutos = produtoService.buscarPorCategoria(categoria.getId());
+		if (!todosProdutos.isEmpty()) {
+			throw new ObjetoPossuiRelacionamentoException(
+					"Impossivel Excluir Essa Categoria pois ela possui Produtos vinculados");
+		}
+	}
+
 	private CategoriaProduto verificaSeExiste(Long id) throws ObjetoNaoEncotradoException {
-		return categoriaProdutoRepository.findById(id).orElseThrow(
-				() -> new ObjetoNaoEncotradoException("Categoria de Produto", "id", id.toString()));
+		return categoriaProdutoRepository.findById(id)
+				.orElseThrow(() -> new ObjetoNaoEncotradoException("Categoria de Produto", "id", id.toString()));
 	}
 
 	private void verificaJaSeExiste(String nome) throws ObjetoJaExisteException {
 		Optional<CategoriaProduto> categoriaProduto = categoriaProdutoRepository.findByNome(nome);
 		if (categoriaProduto.isPresent()) {
-	throw new ObjetoJaExisteException("Categoria de Produto", "nome", nome);
+			throw new ObjetoJaExisteException("Categoria de Produto", "nome", nome);
 		}
 	}
 

@@ -4,14 +4,13 @@ import { useHistory } from "react-router-dom";
 import ProdutoService from "../../../services/ProdutoService";
 import CategoriaProdutoService from "../../../services/CategoriaProdutoService";
 
-function Teste() {
+function UpdateProdutoComponet({ match }) {
+  const [errors, setErrors] = useState({});
   const history = useHistory();
-  // eslint-disable-next-line no-unused-vars
-  const [validated, setValidated] = useState(true);
   const [produto, setProduto] = useState({
     nome: "",
     descricao: "",
-    preco: 0,
+    preco: parseFloat(0),
     categoriaProduto: {},
   });
   const [categoriaProdutos, setCategoriaProdutos] = useState([]);
@@ -24,15 +23,31 @@ function Teste() {
         categoriaProduto: res.data[0],
       }));
     });
+
+    ProdutoService.getProdutoById(match.params.id).then((produto) => {
+      setProduto(produto.data);
+
+      setTimeout(() => {
+        document.getElementById("categorias").value = JSON.stringify(
+          produto.data.categoriaProduto
+        );
+      }, 200);
+    });
+
+    //     var select = document.getElementById('categorias');
+    // var value = select.options[select.selectedIndex].text;
+    // alert(value)
   }, []);
 
-  const saveProduto = () => {
+  const attProduto = (produto) => {
     console.log(`produto => ${JSON.stringify(produto)}`);
 
-    ProdutoService.createProduto(produto).then((res) => {
-      console.log(res);
-      history.push("/adm");
-    });
+    ProdutoService.updateProduto(produto, produto.id)
+      .then(() => {
+        alert("produto criado com sucesso");
+        history.push("/adm/form/produtos");
+      })
+      .catch((e) => alert("erro"));
   };
 
   const handleProdutoChange = (e) => {
@@ -44,21 +59,44 @@ function Teste() {
       ...prevState,
       [name]: value,
     }));
+
+    if (!!errors[name])
+      setErrors({
+        ...errors,
+        [name]: null,
+      });
   };
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    form.checkValidity();
-
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // get our new errors
+    const newErrors = findFormErrors();
+    // Conditional logic:
+    if (Object.keys(newErrors).length > 0) {
+      // We got errors!
+      setErrors(newErrors);
     } else {
-      saveProduto();
-
-      console.log(`produto => ${JSON.stringify(produto)}`);
-      event.preventDefault();
+      attProduto(produto);
     }
+  };
+
+  function validatePreco(valor) {
+    var regex = /^\d+(?:\.\d{0,2})$/;
+    if (regex.test(valor) && !isNaN(valor) && valor > 0) return true;
+    return false;
+  }
+
+  const findFormErrors = () => {
+    const { nome, preco } = produto;
+
+    const newErrors = {};
+    // name errors
+    if (!nome || nome === "") newErrors.nome = "Não pode ser vazio!";
+    else if (nome.length < 2) newErrors.nome = "Nome é muito curto";
+
+    if (!validatePreco(preco)) newErrors.preco = "Preço Invalído";
+
+    return newErrors;
   };
 
   return (
@@ -66,9 +104,9 @@ function Teste() {
       <div className="container">
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md=3">
-            <h3>Adicionar Produto</h3>
+            <h3>Atualizar Produto</h3>
             <div className="card-body">
-              <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit}>
                 <Form.Group as={Col}>
                   <Form.Label>Nome</Form.Label>
                   <Form.Control
@@ -78,7 +116,11 @@ function Teste() {
                     name="nome"
                     type="text"
                     placeholder="Nome"
+                    isInvalid={!!errors.nome}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.nome}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>Descrição</Form.Label>
@@ -88,26 +130,43 @@ function Teste() {
                     onChange={handleProdutoChange}
                     type="text"
                     placeholder="Descrição"
+                    isInvalid={!!errors.descricao}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.descricao}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group as={Col}>
                   <Form.Label>Preço</Form.Label>
                   <Form.Control
                     name="preco"
-                    value={produto.preco}
+                    value={produto.preco.toString().replace(".", ",")}
                     onChange={handleProdutoChange}
                     type="text"
                     placeholder="Preço"
                     required
+                    isInvalid={!!errors.preco}
+                    onBlur={() => {
+                      var { preco } = produto;
+                      setProduto({
+                        ...produto,
+                        preco: parseFloat(preco).toFixed(2),
+                      });
+                    }}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.preco}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>Categoria Produto</Form.Label>
                   <Form.Control
+                    id="categorias"
                     as="select"
                     name="categoriaProduto"
                     onChange={handleProdutoChange}
+                    required
                   >
                     {categoriaProdutos.map((tp) => (
                       <option key={tp.id} value={JSON.stringify(tp)}>
@@ -117,7 +176,7 @@ function Teste() {
                   </Form.Control>
                 </Form.Group>
 
-                <Button type="submit">Adicionar Produto</Button>
+                <Button type="submit">Atualizar Produto</Button>
               </Form>
             </div>
           </div>
@@ -127,4 +186,4 @@ function Teste() {
   );
 }
 
-export default Teste;
+export default UpdateProdutoComponet;

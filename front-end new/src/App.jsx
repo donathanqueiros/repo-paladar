@@ -8,6 +8,8 @@ import "antd/dist/antd.css";
 import AppAdm from "./Components/AdmCardapioNEW/AppAdm";
 import CreateProdutoComponent from "./Components/AdmCardapioNEW/Components/CreateProdutoComponent";
 import Teste from "./Teste";
+import UpdateProdutoComponet from "./Components/AdmCardapioNEW/Components/UpdateProdutoComponent";
+import CreateCategoriaComponent from "./Components/AdmCardapioNEW/Components/CreateCategoriaComponent";
 
 const App = () => {
   const styleGeral = {
@@ -20,10 +22,19 @@ const App = () => {
         <Switch>
           <Route path="/" exact component={AppCardapio}></Route>
           <Route path="/admcardapio" exact component={AppAdmCardapio}></Route>
+          <Route path="/adm/add-produto" component={CreateProdutoComponent} />
           <Route
-            path="/adm/add-produto"
-            component={CreateProdutoComponent}
-          ></Route>
+            path="/adm/edit-categoria/:id"
+            component={CreateCategoriaComponent}
+          />
+          <Route
+            path="/adm/edit-categoria/"
+            component={CreateCategoriaComponent}
+          />
+          <Route
+            path="/adm/edit-produto/:id"
+            component={UpdateProdutoComponet}
+          />
           {/* <Route path='/view-employee/:id' component={ViewEmployeeComponent}></Route> */}
           <Route path="/adm" component={AppAdm}></Route>
           <Route path="/teste" component={Teste}></Route>

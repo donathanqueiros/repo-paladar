@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import CategoriaComponent from "./CategoriaComponent";
 // import ItemCategoriaComponent from "./ItemCategoriaComponent";
 import LabelComponent from "./LabelComponent";
-// import ProdutoService from "../../services/ProdutoService";
-// import CategoriaService from "../../services/CategoriaService";
+import ProdutoService from "../../services/ProdutoService";
+import CategoriaProdutoService from "../../services/CategoriaProdutoService";
 import BannerComponent from "./BannerComponent";
 import CardGrandeComponent from "./CardGrandeComponent";
 import CardPequenoComponent from "./CardPequenoComponent";
@@ -11,21 +11,22 @@ import CategoriaComponent from "./CategoriaComponent";
 import data from "../../data.js";
 import ModalComponent from "./ModalComponent";
 import CarrinhoComponent from "./CarrinhoComponent";
+import useCarrinho from "../../hooks/useCarrinho";
 
-const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
-  const [produtos, setProdutos] = useState(data.produtos);
-  const [categorias, setCategorias] = useState(data.categorias);
+const CardapioComponent = ({ show, setShow }) => {
+  const [produtos, setProdutos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
 
-  // useEffect(() => {
-  //   ProdutoService.getProdutos().then((res) => {
-  //     console.log(res.data);
-  //     // setProdutos(res.data);
-  //   });
-  //   CategoriaService.getCategorias().then((res) => {
-  //     console.log(res.data);
-  //     // setCategorias(res.data);
-  //   });
-  // }, []);
+  const { carrinho, addCarrinho, removeCarrinho } = useCarrinho();
+
+  useEffect(() => {
+    ProdutoService.getProdutos().then((res) => {
+      setProdutos(res.data);
+    });
+    CategoriaProdutoService.getCategorias().then((res) => {
+      setCategorias(res.data);
+    });
+  }, []);
 
   const centroStyle = {
     position: "relative",
@@ -39,20 +40,7 @@ const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
       "10px 0px 30px rgba(0, 0, 0, 0.25), -10px 0px 30px rgba(0, 0, 0, 0.25)",
   };
 
-  const addCarrinho = (produto) => {
-    setCarrinho([...carrinho, produto]);
-  };
-
-  const removeCarrinho = (produto) => {
-    var idx = carrinho.findIndex((p) => p.id == produto.id);
-    if (idx != -1) {
-      carrinho.splice(idx, 1);
-      setCarrinho([...carrinho]);
-    }
-  };
-
   function Teste() {
-    // const handleShow = () => setShow(true);
     return (
       <main style={{ width: "100%" }}>
         <div style={centroStyle}>
@@ -78,16 +66,18 @@ const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
           </CategoriaComponent>
 
           {categorias.map((cat) => {
+            console.log(cat);
             return (
               <CategoriaComponent titulo={cat.nome}>
                 {produtos.map((prod) => {
-                  if (prod.categoriaProduto === cat.nome) {
+                  console.log(prod.categoriaProduto.id === cat.id);
+                  if (prod.categoriaProduto.id === cat.id) {
                     return (
                       <CardPequenoComponent
-                        titulo={prod.titulo}
-                        subtitulo={prod.subtitulo}
+                        titulo={prod.nome}
+                        subtitulo={prod.descricao}
                         preco={prod.preco}
-                        src={prod.src}
+                        src={prod.imgProduto.src}
                         qtd={
                           carrinho.filter((valor) => valor.id === prod.id)
                             .length
@@ -101,23 +91,6 @@ const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
               </CategoriaComponent>
             );
           })}
-
-          {/* {categorias.map((categoria) => (
-            <CategoriaComponent key={categoria.id} nome={categoria.nome}>
-              {produtos.map((prod) => {
-                if (categoria.id == prod.categoriaProduto.id) {
-                  return (
-                    <ItemCategoriaComponent
-                      key={prod.id}
-                      nome={prod.nome}
-                      descricao={prod.descricao}
-                      preco={prod.preco}
-                    />
-                  );
-                }
-              })}
-            </CategoriaComponent>
-          ))} */}
         </div>
       </main>
     );
@@ -130,7 +103,6 @@ const CardapioComponent = ({ carrinho, setCarrinho, show, setShow }) => {
       <ModalComponent onHide={() => {}} show={show}>
         <CarrinhoComponent
           carrinho={carrinho}
-          setCarrinho={setCarrinho}
           closeModal={() => setShow(false)}
           add={addCarrinho}
           remove={removeCarrinho}

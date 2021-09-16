@@ -35,8 +35,8 @@ public class Endereco {
 	@Column(name = "BAIRRO")
 	private String bairro;
 
-	@Column(name = "RUA")
-	private String rua;
+	@Column(name = "LOGRADOURO")
+	private String logradouro;
 
 	@Column(name = "NUMERO")
 	private Integer numero;

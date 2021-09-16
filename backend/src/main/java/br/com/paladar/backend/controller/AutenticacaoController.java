@@ -37,8 +37,8 @@ public class AutenticacaoController {
 	@Autowired
 	private ClienteRepository repository;
 
-	@Autowired
-	private ClienteMapper clienteMapper;
+//	@Autowired
+//	private ClienteMapper clienteMapper;
 
 	@PostMapping("/auth")
 	public ResponseEntity<TokenDto> autenticar(@RequestBody LoginForm form) {

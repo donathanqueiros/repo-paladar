@@ -3,10 +3,11 @@ import HeaderComponent from "../Cardapio/HeaderComponent";
 import FooterComponent from "../Cardapio/FooterComponent";
 import CardapioComponent from "./CardapioComponent";
 import Fundo from "../../assets/img/fundo.png";
+import useCarrinho from "../../hooks/useCarrinho";
 
 const AppCardapio = () => {
-  const [carrinho, setCarrinho] = useState([]);
   const [show, setShow] = useState(false);
+
   // var value = carrinho.itens.filter((value) => value.id === id);
   // if (value.length != 0) {
   // setCarrinho({ itens: [...carrinho.itens, ] });
@@ -24,12 +25,7 @@ const AppCardapio = () => {
   return (
     <div style={style}>
       <HeaderComponent modalCarrinho={() => setShow(true)} />
-      <CardapioComponent
-        carrinho={carrinho}
-        setCarrinho={setCarrinho}
-        show={show}
-        setShow={setShow}
-      />
+      <CardapioComponent show={show} setShow={setShow} />
       <FooterComponent />
     </div>
   );

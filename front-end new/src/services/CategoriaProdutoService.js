@@ -2,7 +2,7 @@ import axios from "axios";
 
 const EMPLOYEE_API_BASE_URL = "http://localhost:8080/api/categoriaproduto";
 
-class CategoriaService {
+class CategoriaProdutoService {
   getCategorias() {
     return axios.get(EMPLOYEE_API_BASE_URL);
   }
@@ -24,4 +24,4 @@ class CategoriaService {
   }
 }
 
-export default CategoriaService;
+export default new CategoriaProdutoService();

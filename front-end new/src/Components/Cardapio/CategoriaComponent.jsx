@@ -9,16 +9,18 @@ const CategoriaComponent = ({ children, titulo }) => {
       <Container fluid>
         <Row>
           {React.Children.map(children, (child) => {
-            return (
-              <Col
-                xl="4"
-                lg="6"
-                md="6"
-                className="d-flex justify-content-center"
-              >
-                {child}
-              </Col>
-            );
+            if (child != null) {
+              return (
+                <Col
+                  xl="4"
+                  lg="6"
+                  md="6"
+                  className="d-flex justify-content-center"
+                >
+                  {child}
+                </Col>
+              );
+            }
           })}
         </Row>
       </Container>

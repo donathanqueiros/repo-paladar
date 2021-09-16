@@ -1,28 +1,38 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import CategoriaService from "../../../services/CategoriaService";
+import { Link, useHistory } from "react-router-dom";
+import CategoriaProdutoService from "../../../services/CategoriaProdutoService";
 
 const ListProdutoComponent = () => {
   const [categorias, setCategorias] = useState([]);
+  const history = useHistory();
 
   function deleteProduto(id) {
-    console.log(id);
-    // ProdutoService.deleteProduto(id).then((res) => {
-    //   console.log(res);
-    //   this.setState({
-    //     produtos: this.state.produtos.filter((produto) => produto.id !== id),
-    //   });
-    // });
+    CategoriaProdutoService.deleteCategoria(id)
+      .then((res) => {
+        setCategorias(categorias.filter((categoria) => categoria.id !== id));
+      })
+      .catch((error) => {
+        switch (error.response.status) {
+          case 409:
+            alert(
+              "Impossivel Excluir Essa Categoria pois ela possui Produtos vinculados"
+            );
+            break;
+
+          default:
+            break;
+        }
+
+      });
   }
 
   function editProduto(id) {
-    console.log(id);
-    // this.props.history.push(`/add-produto/${id}`);
+    history.push(`/adm/edit-categoria/${id}`);
   }
 
   useEffect(() => {
-    CategoriaService.getCategorias().then((res) => {
+    CategoriaProdutoService.getCategorias().then((res) => {
       setCategorias(res.data);
     });
   }, []);
@@ -31,7 +41,7 @@ const ListProdutoComponent = () => {
     <div>
       <h2 className="text-center">Lista Categorias</h2>
       <div className="row">
-        <Link to="/adm/add-produto">
+        <Link to="/adm/edit-categoria">
           <button className="btn btn-primary">Add Categoria</button>
         </Link>
       </div>

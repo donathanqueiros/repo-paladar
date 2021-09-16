@@ -1,12 +1,9 @@
 package br.com.paladar.backend.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
 import br.com.paladar.backend.controller.form.produto.ProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
-import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
-import br.com.paladar.backend.model.produto.Produto;
 import br.com.paladar.backend.services.produto.ProdutoService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -58,6 +53,12 @@ public class ProdutoController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteProduto(@PathVariable Long id) {
 		produtoService.deletarPorId(id);
+	}
+
+	@GetMapping("/teste/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public  List<ProdutoDTO> teste(@PathVariable Long id) {
+		return produtoService.buscarPorCategoria(id);
 	}
 
 }

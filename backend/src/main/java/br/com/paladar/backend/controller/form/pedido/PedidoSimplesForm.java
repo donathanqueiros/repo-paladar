@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import br.com.paladar.backend.model.cliente.endereco.Endereco;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,24 +13,25 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
+
 @AllArgsConstructor
-public class PedidoForm {
+public class PedidoSimplesForm {
 
 	@NotNull
-	private Boolean entrega;
-
-	private String observacao;
+	private String nome;
+	@NotNull
+	private String telefone;
+	@NotNull
+	private String email;
 
 	@NotNull
-	private Long clienteId;
+	private Boolean frete;
+
+	private Endereco endereco;
+
+//	private String observacao;
 
 	@NotNull
-	private Long formaPagamentoId;
-	@NotNull
-
-	private Long tipoPedidoId;
-	@NotNull
-
-	private List<Long> produtosId;
+	private List<Long> carrinho;
 
 }

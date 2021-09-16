@@ -10,6 +10,7 @@ import ListProdutoComponent from "./Components/ListProdutoComponent";
 import ListCategoriaComponent from "./Components/ListCategoriaComponent";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
+import ListPedidoComponent from "./Components/ListPedidoComponent";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -25,7 +26,7 @@ const SiderDemo = () => {
   };
 
   useEffect(() => {
-    if (path === "/adm") history.push("/adm/dashboard");
+    if (path === "/adm");
   }, []);
 
   return (
@@ -36,14 +37,23 @@ const SiderDemo = () => {
           <Menu.Item key="1" icon={<PieChartOutlined />}>
             <Link to={`${path}/dashboard`}>DashBoard</Link>
           </Menu.Item>
+          <SubMenu key="sub1" icon={<UserOutlined />} title="Pedidos">
+            <Menu.Item key="3">
+              <Link to={`${url}/pedidos/andamento`}>Em Andamento</Link>
+            </Menu.Item>
+            <Menu.Item key="4">
+              <Link to={`${url}/pedidos/finalizados`}>Finalizados</Link>
+            </Menu.Item>
+          </SubMenu>
           <Menu.Item key="2" icon={<DesktopOutlined />}>
             <Link>Cardapio</Link>
           </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="Formulário">
-            <Menu.Item key="3">
+
+          <SubMenu key="sub2" icon={<UserOutlined />} title="Formulário">
+            <Menu.Item key="5">
               <Link to={`${url}/form/produtos`}>Produtos</Link>
             </Menu.Item>
-            <Menu.Item key="4">
+            <Menu.Item key="6">
               <Link to={`${url}/form/categorias`}>Categorias</Link>
             </Menu.Item>
           </SubMenu>
@@ -53,15 +63,18 @@ const SiderDemo = () => {
         <Header className="site-layout-background" style={{ padding: 0 }} />
 
         <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
+          {/* <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
 
           <div
             className="site-layout-background"
             style={{ padding: 24, minHeight: 360 }}
           >
             <Switch>
+              <Route exact path={`${url}/pedidos/andamento`}>
+                <ListPedidoComponent />
+              </Route>
               <Route exact path={`${url}/form/produtos`}>
                 <ListProdutoComponent />
               </Route>

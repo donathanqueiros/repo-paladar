@@ -37,8 +37,15 @@ const HeaderComponent = ({ modalCarrinho }) => {
               CARDAPIO
             </span>
           </Col>
-          <Col md="4" className="d-flex justify-content-end align-items-center ">
-            <Image src={carrinho} className="cursor-pointer" onClick={() => modalCarrinho()} ></Image>
+          <Col
+            md="4"
+            className="d-flex justify-content-end align-items-center "
+          >
+            <Image
+              src={carrinho}
+              className="cursor-pointer"
+              onClick={() => modalCarrinho()}
+            ></Image>
           </Col>
         </Row>
       </Container>

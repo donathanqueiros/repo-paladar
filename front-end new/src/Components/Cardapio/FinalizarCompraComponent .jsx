@@ -5,6 +5,7 @@ import InputMask from "react-input-mask";
 import axios from "axios";
 import iconFechar from "../../assets/img/fechar.png";
 import iconVoltar from "../../assets/img/voltar.png";
+import PedidoService from "../../services/PedidoService";
 
 const FinalizarCompraComponent = ({
   carrinho,
@@ -24,15 +25,27 @@ const FinalizarCompraComponent = ({
       logradouro: "",
       bairro: "",
       cidade: "",
+      estado: "",
     },
-    carrinho: carrinho.map((prod) => {
-      return { id: prod.id };
-    }),
+    carrinho: carrinho.map((prod) => prod.id),
     frete: frete,
   });
 
   const saveProduto = () => {
-    console.log(`produto => ${JSON.stringify(pedido)}`);
+    setPedido({
+      ...pedido,
+      endereco: {
+        ...pedido.endereco,
+        cep: pedido.endereco.cep.replace("-", ""),
+      },
+    });
+    console.log(JSON.stringify(pedido));
+
+    setTimeout(() => {
+      PedidoService.createPedido(pedido)
+        .then((e) => alert("deu certo"))
+        .catch((e) => alert("erro ", e));
+    }, 100);
   };
 
   const handleProdutoChange = (e, isEndereco) => {
@@ -68,8 +81,7 @@ const FinalizarCompraComponent = ({
       // We got errors!
       setErrors(newErrors);
     } else {
-      // No errors! Put any logic here for the form submission!
-      alert(JSON.stringify(pedido));
+      saveProduto();
     }
 
     // if (form.checkValidity() === false) {
@@ -103,7 +115,9 @@ const FinalizarCompraComponent = ({
           let { endereco } = pedido;
           endereco.bairro = data.neighborhood;
           endereco.cidade = data.city;
-          endereco.logradouro = `${data.street} - ${data.city}`;
+          endereco.logradouro = data.street;
+          endereco.estado = data.state;
+
           setPedido((prevState) => ({
             ...prevState,
             endereco,
@@ -116,6 +130,8 @@ const FinalizarCompraComponent = ({
           // endereco.cep = "";
           endereco.bairro = "";
           endereco.logradouro = "";
+          endereco.cidade = "";
+          endereco.estado = "";
           setPedido((prevState) => ({
             ...prevState,
             endereco,
@@ -127,6 +143,8 @@ const FinalizarCompraComponent = ({
       let { endereco } = pedido;
       endereco.bairro = "";
       endereco.logradouro = "";
+      endereco.cidade = "";
+      endereco.estado = "";
       setPedido((prevState) => ({
         ...prevState,
         endereco,
@@ -406,7 +424,7 @@ const FinalizarCompraComponent = ({
                 <Form.Control
                   style={{ ...campo, marginBottom: "30px" }}
                   name="logradouro"
-                  value={pedido.endereco.logradouro}
+                  value={`${pedido.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
                   onChange={(e) => handleProdutoChange(e, true)}
                   type="text"
                   placeholder="Rua / Avenida"

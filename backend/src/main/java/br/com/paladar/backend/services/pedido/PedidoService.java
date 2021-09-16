@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import br.com.paladar.backend.controller.dto.pedido.PedidoDTO;
 import br.com.paladar.backend.controller.form.pedido.PedidoForm;
@@ -21,6 +22,7 @@ import br.com.paladar.backend.model.produto.Produto;
 import br.com.paladar.backend.repository.pedido.PedidoRepository;
 import lombok.AllArgsConstructor;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PedidoService {

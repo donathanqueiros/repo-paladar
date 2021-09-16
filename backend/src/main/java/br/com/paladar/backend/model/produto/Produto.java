@@ -41,4 +41,8 @@ public class Produto {
 	@JoinColumn(name = "ID_CATEGORIA_PRODUTO")
 	private CategoriaProduto categoriaProduto;
 
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "ID_IMG_PRODUTO")
+	private ImgProduto imgProduto;
+
 }
