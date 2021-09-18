@@ -12,6 +12,10 @@ class PedidoService {
     return axios.get(EMPLOYEE_API_BASE_URL + "/andamento");
   }
 
+  getPedidosFinalizado() {
+    return axios.get(EMPLOYEE_API_BASE_URL + "/finalizado");
+  }
+
   despacharPedido(produtoId) {
     return axios.post(EMPLOYEE_API_BASE_URL + "/" + produtoId + "/despachar");
   }
@@ -24,12 +28,8 @@ class PedidoService {
     return axios.get(EMPLOYEE_API_BASE_URL + "/" + produtoId);
   }
 
-  updatePedido(produto, produtoId) {
-    return axios.put(EMPLOYEE_API_BASE_URL + "/" + produtoId, produto);
-  }
-
-  deletePedido(produtoId) {
-    return axios.delete(EMPLOYEE_API_BASE_URL + "/" + produtoId);
+  cancelarPedido(produtoId) {
+    return axios.delete(EMPLOYEE_API_BASE_URL + "/" + produtoId + "/cancelar");
   }
 }
 

@@ -11,14 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.paladar.backend.controller.dto.PedidoSimplesDTO;
-import br.com.paladar.backend.controller.dto.pedido.PedidoDTO;
 import br.com.paladar.backend.controller.form.pedido.PedidoSimplesForm;
 import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
 import br.com.paladar.backend.exception.PedidoImpossivelDespacharException;
+import br.com.paladar.backend.exception.PedidoJaCanceladoException;
 import br.com.paladar.backend.mapper.PedidoSimplesMapper;
 import br.com.paladar.backend.model.cliente.ClienteSimples;
 import br.com.paladar.backend.model.cliente.endereco.Endereco;
-import br.com.paladar.backend.model.pedido.Pedido;
 import br.com.paladar.backend.model.pedido.PedidoSimples;
 import br.com.paladar.backend.model.produto.Produto;
 import br.com.paladar.backend.repository.cliente.ClienteSimplesRepository;
@@ -39,8 +38,14 @@ public class PedidoSimplesService {
 	private EnderecoRepository enderecoRepository;
 
 	public List<PedidoSimplesDTO> todosPedidos() {
-		// TODO Auto-generated method stub
-		return null;
+		List<PedidoSimples> pedidos = pedidoSimplesRepository.findAll(Sort.by(Sort.Direction.ASC, "dataInicioPedido"));
+		return pedidos.stream().map(pedidoSimplesMapper::toDTO).collect(Collectors.toList());
+	}
+
+	public List<PedidoSimplesDTO> pedidosFinalizado() {
+		List<PedidoSimples> pedidos = pedidoSimplesRepository
+				.findAllFinalizado(Sort.by(Sort.Direction.ASC, "dataInicioPedido"));
+		return pedidos.stream().map(pedidoSimplesMapper::toDTO).collect(Collectors.toList());
 	}
 
 	public List<PedidoSimplesDTO> todosPedidosAndamento() {
@@ -75,9 +80,9 @@ public class PedidoSimplesService {
 		return produtos.stream().map(produto -> produto.getPreco()).reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
-	public PedidoDTO buscarPorId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public PedidoSimplesDTO buscarPorId(Long id) {
+		PedidoSimples pedido = verificaSeExiste(id);
+		return pedidoSimplesMapper.toDTO(pedido);
 	}
 
 	public void despachar(Long id) throws PedidoImpossivelDespacharException {
@@ -88,8 +93,10 @@ public class PedidoSimplesService {
 
 	}
 
-	public void cancelar(Long id) {
-		// TODO Auto-generated method stub
+	public void cancelar(Long id) throws PedidoJaCanceladoException {
+		PedidoSimples pedido = verificaSeExiste(id);
+		pedido.cancelar();
+		pedidoSimplesRepository.flush();
 
 	}
 

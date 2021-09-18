@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.paladar.backend.controller.dto.PedidoSimplesDTO;
-import br.com.paladar.backend.controller.dto.pedido.PedidoDTO;
 import br.com.paladar.backend.controller.form.pedido.PedidoSimplesForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
 import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;
@@ -33,23 +33,19 @@ public class PedidoSimplesController {
 	private PedidoSimplesService pedidoSimplesService;
 
 	@GetMapping
-	public List<PedidoSimplesDTO> getAllProdutos() {
+	public List<PedidoSimplesDTO> getAllPedidoSimpless() {
 		return pedidoSimplesService.todosPedidos();
 	}
 
 	@GetMapping("/andamento")
-	public List<PedidoSimplesDTO> getProdutosAndamento() {
+	public List<PedidoSimplesDTO> getPedidoSimplessAndamento() {
 		return pedidoSimplesService.todosPedidosAndamento();
 	}
-//	@GetMapping("/pendente")
-//	public List<PedidoDTO> getProdutosPendente() {
-//		return pedidoService.pedidosPendente();
-//	}
-//
-//	@GetMapping("/preparando")
-//	public List<PedidoDTO> getProdutosPreparando() {
-//		return pedidoService.pedidosPreparando();
-//	}
+
+	@GetMapping("/finalizado")
+	public List<PedidoSimplesDTO> getPedidoSimplessFinalizados() {
+		return pedidoSimplesService.pedidosFinalizado();
+	}
 
 	@PostMapping("{id}/despachar")
 	@ResponseStatus(HttpStatus.ACCEPTED)
@@ -58,7 +54,7 @@ public class PedidoSimplesController {
 		pedidoSimplesService.despachar(id);
 	}
 
-	@PostMapping("{id}/cancelar")
+	@DeleteMapping("{id}/cancelar")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void cancelar(@PathVariable Long id) throws ObjetoNaoEncotradoException, PedidoJaCanceladoException {
 		pedidoSimplesService.cancelar(id);
@@ -75,7 +71,7 @@ public class PedidoSimplesController {
 	}
 
 	@GetMapping("/{id}")
-	public PedidoDTO GetProdutoById(@PathVariable Long id) {
+	public PedidoSimplesDTO GetPedidoSimplesById(@PathVariable Long id) {
 		return pedidoSimplesService.buscarPorId(id);
 	}
 

@@ -26,35 +26,17 @@ export default () => {
 
   const [pedidos, setPedidos] = useState([]);
   const [checkBox, setCheckBox] = useState({
-    PENDENTE: true,
-    PREPARANDO: true,
-    PRONTO: true,
-    ENTREGA: true,
+    ENTREGUE: true,
+    CANCELADO: true,
   });
   const history = useHistory();
 
-  const cancelarPedido = (id) => {
-    PedidoService.cancelarPedido(id).then((res) => {
-      console.log("pedido Cancelado");
-
-      setPedidos(pedidos.filter((pedido) => pedido.idPedido !== id));
-    });
-  };
-
   useEffect(() => {
-    PedidoService.getPedidosAndamento().then((res) => {
+    PedidoService.getPedidosFinalizado().then((res) => {
       setPedidos(res.data);
+      console.log(res.data);
     });
-
-    setInterval(() => {
-      attPedidos();
-    }, 5000);
   }, []);
-
-  const viewProduto = (id) => {
-    console.log(id);
-    history.push(`/view-produto/${id}`);
-  };
 
   const despacharPedido = (id) => {
     PedidoService.despacharPedido(id).then(() => {
@@ -66,12 +48,12 @@ export default () => {
   const attPedidos = () => {
     PedidoService.getPedidosAndamento().then((res) => {
       setPedidos(res.data);
+      console.log(res.data);
     });
   };
 
   const checkBoxHandle = (e) => {
     const { id, checked } = e.target;
-
     setCheckBox({ ...checkBox, [id]: checked });
   };
   const modalCliente = (cliente) => {
@@ -89,7 +71,7 @@ export default () => {
           <span>
             <b>{produtos.filter((valor) => valor.id === prod.id).length}</b>
             {" - "}
-            <b>{prod.nome}</b> <br />
+            <b>{prod.nome}</b>
           </span>
         );
       });
@@ -108,35 +90,19 @@ export default () => {
           <div key={`inline-${type}`} className="md-3">
             <FormCheck
               inline
-              label="PENDENTE"
+              label="ENTREGUE"
               type={type}
-              id="PENDENTE"
+              id="ENTREGUE"
               onClick={checkBoxHandle}
-              checked={checkBox.PENDENTE}
+              checked={checkBox.ENTREGUE}
             />
             <FormCheck
               inline
-              label="PREPARANDO"
+              label="CANCELADO"
               type={type}
-              id="PREPARANDO"
+              id="CANCELADO"
               onClick={checkBoxHandle}
-              checked={checkBox.PREPARANDO}
-            />
-            <FormCheck
-              inline
-              label="PRONTO"
-              type={type}
-              id="PRONTO"
-              onClick={checkBoxHandle}
-              checked={checkBox.PRONTO}
-            />
-            <FormCheck
-              inline
-              label="ENTREGA"
-              type={type}
-              id="ENTREGA"
-              onClick={checkBoxHandle}
-              checked={checkBox.ENTREGA}
+              checked={checkBox.CANCELADO}
             />
           </div>
         ))}
@@ -144,13 +110,14 @@ export default () => {
       <div className="row">
         <table className="table table-striped table-bordered">
           <thead>
-            <tr className="text-center">
+            <tr>
               <th>ID PEDIDO </th>
               <th>Nome Cliente </th>
               <th>Entrega</th>
               <th>Produtos</th>
               <th>Total</th>
-              <th>Status </th>
+              <th>Data Inicio </th>
+              <th>Data Fim </th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -159,7 +126,7 @@ export default () => {
             {pedidos
               .filter((pedido) => checkBox[pedido.status])
               .map((pedido) => (
-                <tr key={pedido.idPedido} className="text-center">
+                <tr key={pedido.idPedido}>
                   <td>{pedido.idPedido}</td>
                   <td
                     className="cursor-pointer"
@@ -172,20 +139,11 @@ export default () => {
                   <td>
                     {parseFloat(pedido.total).toFixed(2).replace(".", ",")}
                   </td>
-                  <td>{pedido.status}</td>
+                  <td>{pedido.dataInicioPedido}</td>
+                  <td>{pedido.dataFimPedido}</td>
                   <td>
-                    <button
-                      onClick={() => despacharPedido(pedido.idPedido)}
-                      className="btn btn-info"
-                    >
-                      Despachar
-                    </button>
-                    <button
-                      style={{ marginLeft: "10px" }}
-                      onClick={() => cancelarPedido(pedido.idPedido)}
-                      className="btn btn-danger"
-                    >
-                      Cancelar Pedido
+                    <button onClick={() => null} className="btn btn-info">
+                      VER
                     </button>
                   </td>
                 </tr>

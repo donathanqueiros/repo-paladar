@@ -90,6 +90,7 @@ public class PedidoSimples {
 		if (this.status == CANCELADO)
 			throw new PedidoJaCanceladoException("Pedido", "id", this.idPedido.toString());
 		this.status = CANCELADO;
+		this.setDataFimPedido(LocalDateTime.now());
 	}
 
 }

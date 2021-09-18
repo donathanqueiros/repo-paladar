@@ -16,4 +16,7 @@ public interface PedidoSimplesRepository extends CustomRepository<PedidoSimples,
 	@Query("SELECT p FROM PedidoSimples p WHERE p.status != 'entregue'")
 	List<PedidoSimples> findAllAndamento(Sort sort);
 
+	@Query("SELECT p FROM PedidoSimples p WHERE p.status = 'entregue' or p.status = 'cancelado' ")
+	List<PedidoSimples> findAllFinalizado(Sort sort);
+
 }

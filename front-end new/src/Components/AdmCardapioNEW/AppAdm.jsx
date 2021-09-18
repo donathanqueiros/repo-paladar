@@ -11,6 +11,7 @@ import ListCategoriaComponent from "./Components/ListCategoriaComponent";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import ListPedidoComponent from "./Components/ListPedidoComponent";
+import ListPedidoFinalizadoComponent from "./Components/ListPedidoFinalizadoComponent";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -74,6 +75,9 @@ const SiderDemo = () => {
             <Switch>
               <Route exact path={`${url}/pedidos/andamento`}>
                 <ListPedidoComponent />
+              </Route>
+              <Route exact path={`${url}/pedidos/finalizados`}>
+                <ListPedidoFinalizadoComponent />
               </Route>
               <Route exact path={`${url}/form/produtos`}>
                 <ListProdutoComponent />
