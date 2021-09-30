@@ -23,6 +23,7 @@ import br.com.paladar.backend.model.produto.Produto;
 import br.com.paladar.backend.repository.cliente.ClienteSimplesRepository;
 import br.com.paladar.backend.repository.cliente.EnderecoRepository;
 import br.com.paladar.backend.repository.pedido.PedidoSimplesRepository;
+import br.com.paladar.backend.services.produto.ProdutoService;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -34,6 +35,8 @@ public class PedidoSimplesService {
 	private PedidoSimplesRepository pedidoSimplesRepository;
 
 	private ClienteSimplesRepository clienteSimplesRepository;
+
+	private ProdutoService produtoService;
 
 	private EnderecoRepository enderecoRepository;
 
@@ -105,5 +108,7 @@ public class PedidoSimplesService {
 		return pedidoSimplesRepository.findById(id)
 				.orElseThrow(() -> new ObjetoNaoEncotradoException(PedidoSimples.class.getName(), "id", id.toString()));
 	}
+
+
 
 }

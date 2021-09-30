@@ -1,5 +1,6 @@
 package br.com.paladar.backend.services.produto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.paladar.backend.controller.dto.pedido.QuantidadeVendidaDTO;
 import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
 import br.com.paladar.backend.controller.form.produto.ProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
@@ -73,6 +75,23 @@ public class ProdutoService {
 		if (produto.isPresent()) {
 			throw new ObjetoJaExisteException(Produto.class.getName(), "nome", nome);
 		}
+	}
+	
+	
+	public List<QuantidadeVendidaDTO> maisVendidos() {
+
+		List<QuantidadeVendidaDTO> quantidadeVendidaDTOs = new ArrayList<>();
+		List<Object[]> valores = produtoRepository.maisVendidos();
+		valores.forEach(valor -> {
+			ProdutoDTO produto = buscarPorId(Long.parseLong(String.valueOf(valor[0])));
+
+			QuantidadeVendidaDTO dto = QuantidadeVendidaDTO.builder().produto(produto)
+					.quantidadeVendida(Long.parseLong(String.valueOf(valor[1]))).build();
+
+			quantidadeVendidaDTOs.add(dto);
+
+		});
+		return quantidadeVendidaDTOs;
 	}
 
 }

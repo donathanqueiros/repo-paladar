@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.paladar.backend.controller.dto.pedido.QuantidadeVendidaDTO;
 import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
 import br.com.paladar.backend.controller.form.produto.ProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
@@ -57,8 +58,13 @@ public class ProdutoController {
 
 	@GetMapping("/teste/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public  List<ProdutoDTO> teste(@PathVariable Long id) {
+	public List<ProdutoDTO> teste(@PathVariable Long id) {
 		return produtoService.buscarPorCategoria(id);
+	}
+
+	@GetMapping("/maisvendidos")
+	public List<QuantidadeVendidaDTO> getMaisVendidos() {
+		return produtoService.maisVendidos();
 	}
 
 }

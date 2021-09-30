@@ -1,11 +1,12 @@
 package br.com.paladar.backend.repository.produto;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.paladar.backend.model.produto.ImgProduto;
+import br.com.paladar.backend.repository.CustomRepository;
 
 
-public interface ImgProdutoRepository extends JpaRepository<ImgProduto, Long> {
+public interface ImgProdutoRepository extends CustomRepository<ImgProduto, Long> {
+	
+	
 
 
 }

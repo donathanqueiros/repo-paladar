@@ -31,7 +31,7 @@ public class ProdutoForm {
 
 	@NotNull
 	private CategoriaProduto categoriaProduto;
-
-	private ImgProduto imgProduto = ImgProduto.builder().id(1L).build();
+	@NotNull
+	private ImgProduto imgProduto;
 
 }

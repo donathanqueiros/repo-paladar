@@ -1,6 +1,7 @@
 package br.com.paladar.backend.services.pedido;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import br.com.paladar.backend.controller.dto.pedido.PedidoDTO;
+import br.com.paladar.backend.controller.dto.pedido.QuantidadeVendidaDTO;
+import br.com.paladar.backend.controller.dto.produto.ProdutoDTO;
 import br.com.paladar.backend.controller.form.pedido.PedidoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
 import br.com.paladar.backend.exception.ObjetoNaoEncotradoException;

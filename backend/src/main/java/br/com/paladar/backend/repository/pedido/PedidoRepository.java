@@ -16,4 +16,6 @@ public interface PedidoRepository extends CustomRepository<Pedido, Long> {
 	@Query("SELECT p FROM Pedido p WHERE p.status != 'entregue'")
 	List<Pedido> findAllAndamento(Sort sort);
 
+
+
 }
