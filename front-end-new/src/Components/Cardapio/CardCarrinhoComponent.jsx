@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-bootstrap";
+import { Image, Container } from "react-bootstrap";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import BotaoCardComponent from "./BotaoCardComponent";
 
@@ -9,11 +9,11 @@ const CardCarrinhoComponent = ({ titulo, preco, src, qtd, add, remove }) => {
   const { red, black } = colors;
 
   const cardStyle = {
-    width: "590px",
+    width: "100%",
+    maxWidth: "590px",
     height: "138px",
     cursor: "pointer",
     // filter: "drop-shadow(10px 10px 30px rgba(0, 0, 0, 0.15))",
-
     MozBoxShadow: "10px 10px 30px rgba(0, 0, 0, 0.15)",
     WebkitBoxShadow: "10px 10px 30px rgba(0, 0, 0, 0.15)",
     boxShadow: "10px 10px 30px rgba(0, 0, 0, 0.15)",
@@ -54,7 +54,7 @@ const CardCarrinhoComponent = ({ titulo, preco, src, qtd, add, remove }) => {
   };
 
   return (
-    <div style={cardStyle} className="d-flex flex-row">
+    <Container fluid style={cardStyle} className="d-flex flex-row">
       <Image style={imgStyle} src={src}></Image>
       <div
         style={textStyle}
@@ -78,7 +78,7 @@ const CardCarrinhoComponent = ({ titulo, preco, src, qtd, add, remove }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 

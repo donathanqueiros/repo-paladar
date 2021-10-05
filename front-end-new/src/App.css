@@ -1,12 +1,12 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
-}
+} */
 
-main {
+/* main {
   background-color: #fff;
   width: 100%;
-}
+} */
 
 /* #root {
   background-image: linear-gradient(
@@ -30,3 +30,8 @@ main {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.container-fluid {
+  padding: 0px;
+}
+

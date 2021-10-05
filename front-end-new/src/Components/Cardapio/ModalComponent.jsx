@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { colors, fontFamily } from "../../assets/css/Style";
+import { Container, Row, Col } from "react-bootstrap";
 
 const ModalComponent = ({
   styleModal,
@@ -18,12 +19,13 @@ const ModalComponent = ({
   const [modalStyleDefault, setModalStyleDefault] = useState({
     display: "none",
     position: "fixed",
-    zIndex: 2,
+    zIndex: "2",
     left: "0",
     top: "0",
     width: "100%",
     height: "100%",
     overflow: "auto",
+    padding: "0px",
     backgroundColor: "rgba(17, 0, 17, 0.4)",
   });
   const { mont } = fontFamily;
@@ -70,22 +72,22 @@ const ModalComponent = ({
   }, [show]);
 
   return (
-    <div
+    <Container
+      fluid
       // onClick={onHideHandler}
       id="modal"
       style={Object.assign(modalStyleDefault, styleModal)}
     >
-      <div
+      <Row
         style={{
           margin: "auto",
-          width: "60%",
         }}
       >
         {children}
-      </div>
+      </Row>
       {/* <div style={{ ...contentStyleDefault, ...styleContent }}>
       </div> */}
-    </div>
+    </Container>
   );
 };
 

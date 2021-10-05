@@ -23,7 +23,7 @@ import br.com.paladar.backend.exception.PedidoImpossivelDespacharException;
 import br.com.paladar.backend.exception.PedidoJaCanceladoException;
 import br.com.paladar.backend.services.pedido.PedidoService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {

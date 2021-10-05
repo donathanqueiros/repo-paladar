@@ -22,7 +22,7 @@ import br.com.paladar.backend.controller.form.produto.CategoriaProdutoForm;
 import br.com.paladar.backend.exception.ObjetoJaExisteException;
 import br.com.paladar.backend.services.produto.CategoriaProdutoService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/categoriaproduto")
 public class CategoriaProdutoController {

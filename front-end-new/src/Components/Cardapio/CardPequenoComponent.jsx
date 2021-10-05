@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Image } from "react-bootstrap";
+import React, { Component, useEffect, useState } from "react";
+import { Image, Container } from "react-bootstrap";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import BotaoCardComponent from "./BotaoCardComponent";
 import CardCompletoComponent from "./CardCompletoComponent";
 import ModalComponent from "./ModalComponent";
 
-const CardGrandeComponent = ({
+const CardPequenoComponent = ({
+  chave,
   titulo,
   subtitulo,
   preco,
@@ -17,6 +18,8 @@ const CardGrandeComponent = ({
   const { mont } = fontFamily;
   const { small } = fontSize;
   const { red, black } = colors;
+
+  const srcStatic = src;
 
   const cardStyle = {
     marginTop: "40px",
@@ -87,9 +90,13 @@ const CardGrandeComponent = ({
   };
 
   return (
-    <>
-      <div style={cardStyle} className="d-flex flex-row">
-        <Image onClick={produtoDetalhes} style={imgStyle} src={src}></Image>
+    <Container Key={chave}>
+      <div Key={chave} style={cardStyle} className="d-flex flex-row">
+        <Image
+          onClick={produtoDetalhes}
+          style={imgStyle}
+          src={srcStatic}
+        ></Image>
         <div style={textStyle} className="flex-col ">
           <span onClick={produtoDetalhes} style={tituloStyle}>
             {titulo}
@@ -106,6 +113,7 @@ const CardGrandeComponent = ({
             </div>
             <div>
               <BotaoCardComponent
+                teste={chave}
                 qtd={qtd}
                 increment={add}
                 decrement={remove}
@@ -114,8 +122,14 @@ const CardGrandeComponent = ({
           </div>
         </div>
       </div>
-      <ModalComponent onHide={() => setShow(false)} show={show}>
+
+      {/* <ModalComponent
+        onHide={() => setShow(false)}
+        className="zindex-modal"
+        show={show}
+      >
         <CardCompletoComponent
+          mobile={mobile}
           closeModal={() => setShow(false)}
           titulo={titulo}
           subtitulo={subtitulo}
@@ -125,9 +139,9 @@ const CardGrandeComponent = ({
           add={add}
           remove={remove}
         />
-      </ModalComponent>
-    </>
+      </ModalComponent> */}
+    </Container>
   );
 };
 
-export default CardGrandeComponent;
+export default CardPequenoComponent;

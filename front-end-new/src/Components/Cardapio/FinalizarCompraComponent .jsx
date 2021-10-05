@@ -1,22 +1,11 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Image,
-  Row,
-  Spinner,
-  Modal,
-} from "react-bootstrap";
-import { Alert } from "antd";
+import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { colors, fontFamily } from "../../assets/css/Style";
 import InputMask from "react-input-mask";
 import axios from "axios";
 import iconFechar from "../../assets/img/fechar.png";
 import iconVoltar from "../../assets/img/voltar.png";
 import PedidoService from "../../services/PedidoService";
-import styled, { jsx, css, Global } from "@emotion/react";
 import useLoading from "../../hooks/useLoading";
 import useMessage from "../../hooks/useMessage";
 
@@ -25,9 +14,10 @@ const FinalizarCompraComponent = ({
   frete,
   closeModal,
   voltarCarrinho,
+  mobile,
 }) => {
   const { LoadingModal, esconderLoading, mostrarLoading } = useLoading();
-  const { info, sucess, error, warning } = useMessage();
+  const { sucess, error, warning } = useMessage();
 
   const [errors, setErrors] = useState({});
   const [cepValido, setCepValido] = useState(false);
@@ -182,7 +172,8 @@ const FinalizarCompraComponent = ({
   };
   const [validated, setValidated] = useState(false);
   const geralStyle = {
-    width: "794px",
+    width: "100%",
+    maxWidth: "794px",
     backgroundColor: "#FFFFFFF",
   };
   const { insani, mont } = fontFamily;
@@ -291,201 +282,415 @@ const FinalizarCompraComponent = ({
     );
   };
 
-  return (
-    <div style={geralStyle} className="d-flex flex-column align-items-center">
-      <header
-        style={{
-          width: "100%",
-          height: "90px",
-          background: "#FDDC00",
-          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
-          borderRadius: "80px 80px 0px 0px",
-        }}
-        className="d-flex flex-row align-items-center justify-content-around"
+  function Desktop() {
+    return (
+      <Container
+        style={geralStyle}
+        className="d-flex flex-column align-items-center"
       >
-        <div onClick={voltarCarrinho}>
-          <Image
-            style={{
-              width: "42px",
-              height: "42px",
-              cursor: "pointer",
-            }}
-            src={iconVoltar}
-          />
-        </div>
-        <div>
-          <span style={tituloStyle}>
-            Finalizar <br />
-            Pedido
-          </span>
-        </div>
-        <div onClick={closeModal}>
-          <Image
-            style={{
-              width: "42px",
-              height: "42px",
-              cursor: "pointer",
-            }}
-            src={iconFechar}
-          />
-        </div>
-      </header>
-      <main
-        style={{ padding: "24px 0", width: "100%", backgroundColor: "white" }}
-      >
-        <div
+        <Row
           style={{
-            margin: "auto",
-            width: "590px",
+            width: "100%",
+            height: "90px",
+            background: "#FDDC00",
+            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
+            borderRadius: "80px 80px 0px 0px",
           }}
-          className="d-flex flex-column align-items-center"
+          className="d-flex flex-row align-items-center justify-content-around"
         >
-          <Container>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group>
-                <Form.Group style={{ marginBottom: "30px" }}>
-                  <Form.Label style={subtituloStyle}>Informações</Form.Label>
-                  <Form.Control
-                    style={campo}
-                    value={pedido?.nome}
+          <div onClick={voltarCarrinho}>
+            <Image
+              style={{
+                width: "42px",
+                height: "42px",
+                cursor: "pointer",
+              }}
+              src={iconVoltar}
+            />
+          </div>
+          <div>
+            <span style={tituloStyle}>
+              Finalizar <br />
+              Pedido
+            </span>
+          </div>
+          <div onClick={closeModal}>
+            <Image
+              style={{
+                width: "42px",
+                height: "42px",
+                cursor: "pointer",
+              }}
+              src={iconFechar}
+            />
+          </div>
+        </Row>
+        <main
+          style={{ padding: "24px 0", width: "100%", backgroundColor: "white" }}
+        >
+          <div
+            style={{
+              margin: "auto",
+              width: "590px",
+            }}
+            className="d-flex flex-column align-items-center"
+          >
+            <Container>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Group style={{ marginBottom: "30px" }}>
+                    <Form.Label style={subtituloStyle}>Informações</Form.Label>
+                    <Form.Control
+                      style={campo}
+                      value={pedido?.nome}
+                      onChange={handleProdutoChange}
+                      name="nome"
+                      type="text"
+                      placeholder="Nome"
+                      isInvalid={!!errors.nome}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.nome}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <InputMask
+                    mask="(99) 99999-9999"
+                    value={pedido.telefone}
                     onChange={handleProdutoChange}
-                    name="nome"
+                  >
+                    {(inputProps) => (
+                      <Form.Group style={{ marginBottom: "30px" }}>
+                        <Form.Control
+                          {...inputProps}
+                          style={campo}
+                          value={pedido?.telefone}
+                          name="telefone"
+                          type="tel"
+                          placeholder="Celular"
+                          isInvalid={!!errors.telefone}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.telefone}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    )}
+                  </InputMask>
+                  <Form.Group style={{ marginBottom: "30px" }}>
+                    <Form.Control
+                      style={campo}
+                      value={pedido?.email}
+                      onChange={handleProdutoChange}
+                      name="email"
+                      type="email"
+                      placeholder="Email"
+                      isInvalid={!!errors.email}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label style={subtituloStyle}>Endereço</Form.Label>
+
+                  <Row>
+                    <Col>
+                      <InputMask
+                        mask="99999-999"
+                        value={pedido?.endereco.cep}
+                        onChange={(e) => handleProdutoChange(e, true)}
+                        onBlur={complementarCEP}
+                      >
+                        {(inputProps) => (
+                          <Form.Group>
+                            <Form.Control
+                              {...inputProps}
+                              style={campo}
+                              name="cep"
+                              type="text"
+                              placeholder="CEP"
+                              isInvalid={!!errors.cep}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.cep}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        )}
+                      </InputMask>
+                    </Col>
+
+                    <Col>
+                      <InputMask
+                        mask="999999"
+                        value={pedido?.endereco.numero}
+                        onChange={(e) => handleProdutoChange(e, true)}
+                        maskChar=""
+                      >
+                        {(inputProps) => (
+                          <Form.Group>
+                            <Form.Control
+                              {...inputProps}
+                              style={campo}
+                              name="numero"
+                              type="text"
+                              placeholder="Numero"
+                              isInvalid={!!errors.numero}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.numero}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        )}
+                      </InputMask>
+                    </Col>
+                  </Row>
+
+                  <Form.Control
+                    style={{ ...campo, marginBottom: "30px" }}
+                    name="logradouro"
+                    value={`${pedido?.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
+                    onChange={(e) => handleProdutoChange(e, true)}
                     type="text"
-                    placeholder="Nome"
-                    isInvalid={!!errors.nome}
+                    placeholder="Rua / Avenida"
+                    readOnly
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.nome}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <InputMask
-                  mask="(99) 99999-9999"
-                  value={pedido.telefone}
-                  onChange={handleProdutoChange}
-                >
-                  {(inputProps) => (
-                    <Form.Group style={{ marginBottom: "30px" }}>
-                      <Form.Control
-                        {...inputProps}
-                        style={campo}
-                        value={pedido?.telefone}
-                        name="telefone"
-                        type="tel"
-                        placeholder="Celular"
-                        isInvalid={!!errors.telefone}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.telefone}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  )}
-                </InputMask>
-                <Form.Group style={{ marginBottom: "30px" }}>
                   <Form.Control
                     style={campo}
-                    value={pedido?.email}
-                    onChange={handleProdutoChange}
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    isInvalid={!!errors.email}
+                    name="bairro"
+                    value={pedido?.endereco.bairro}
+                    onChange={(e) => handleProdutoChange(e, true)}
+                    type="text"
+                    placeholder="Bairro"
+                    readOnly
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
                 </Form.Group>
-              </Form.Group>
-              <Form.Group>
-                <Form.Label style={subtituloStyle}>Endereço</Form.Label>
 
-                <Row>
-                  <Col>
-                    <InputMask
-                      mask="99999-999"
-                      value={pedido?.endereco.cep}
-                      onChange={(e) => handleProdutoChange(e, true)}
-                      onBlur={complementarCEP}
-                    >
-                      {(inputProps) => (
-                        <Form.Group>
-                          <Form.Control
-                            {...inputProps}
-                            style={campo}
-                            name="cep"
-                            type="text"
-                            placeholder="CEP"
-                            isInvalid={!!errors.cep}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.cep}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      )}
-                    </InputMask>
-                  </Col>
-
-                  <Col>
-                    <InputMask
-                      mask="999999"
-                      value={pedido?.endereco.numero}
-                      onChange={(e) => handleProdutoChange(e, true)}
-                      maskChar=""
-                    >
-                      {(inputProps) => (
-                        <Form.Group>
-                          <Form.Control
-                            {...inputProps}
-                            style={campo}
-                            name="numero"
-                            type="text"
-                            placeholder="Numero"
-                            isInvalid={!!errors.numero}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.numero}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      )}
-                    </InputMask>
-                  </Col>
-                </Row>
-
-                <Form.Control
-                  style={{ ...campo, marginBottom: "30px" }}
-                  name="logradouro"
-                  value={`${pedido?.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
-                  onChange={(e) => handleProdutoChange(e, true)}
-                  type="text"
-                  placeholder="Rua / Avenida"
-                  readOnly
-                />
-                <Form.Control
-                  style={campo}
-                  name="bairro"
-                  value={pedido?.endereco.bairro}
-                  onChange={(e) => handleProdutoChange(e, true)}
-                  type="text"
-                  placeholder="Bairro"
-                  readOnly
-                />
-              </Form.Group>
-
-              <div style={{ marginTop: "48px" }}>{botaoFinalizar()}</div>
-            </Form>
-          </Container>
-        </div>
-      </main>
-      <footer
+                <div style={{ marginTop: "48px" }}>{botaoFinalizar()}</div>
+              </Form>
+            </Container>
+          </div>
+        </main>
+        <Row
+          style={{
+            width: "100%",
+            height: "90px",
+            background: "#FDDC00",
+            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
+            borderRadius: "0px 0px 80px 80px",
+          }}
+        ></Row>
+      </Container>
+    );
+  }
+  function Mobile() {
+    return (
+      <Container
+        fluid
         style={{
-          width: "794px",
-          height: "90px",
-          background: "#FDDC00",
-          boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
-          borderRadius: "0px 0px 80px 80px",
+          backgroundColor: "black",
         }}
-      ></footer>
+      >
+        <Row
+          style={{
+            position: "relative",
+            height: "90px",
+            background: "#FDDC00",
+            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
+          }}
+          className="d-flex flex-row align-items-center justify-content-around"
+        >
+          <div onClick={voltarCarrinho}>
+            <Image
+              style={{
+                width: "42px",
+                height: "42px",
+                cursor: "pointer",
+              }}
+              src={iconVoltar}
+            />
+          </div>
+          <div>
+            <span style={tituloStyle}>
+              Finalizar <br />
+              Pedido
+            </span>
+          </div>
+          <div onClick={closeModal}>
+            <Image
+              style={{
+                width: "42px",
+                height: "42px",
+                cursor: "pointer",
+              }}
+              src={iconFechar}
+            />
+          </div>
+        </Row>
+        <Row
+          style={{
+            padding: "24px 0",
+            backgroundColor: "white",
+          }}
+        >
+          <div
+            style={{
+              margin: "auto",
+              width: "590px",
+            }}
+            className="d-flex flex-column align-items-center"
+          >
+            <Container>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Group style={{ marginBottom: "30px" }}>
+                    <Form.Label style={subtituloStyle}>Informações</Form.Label>
+                    <Form.Control
+                      style={campo}
+                      value={pedido?.nome}
+                      onChange={handleProdutoChange}
+                      name="nome"
+                      type="text"
+                      placeholder="Nome"
+                      isInvalid={!!errors.nome}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.nome}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <InputMask
+                    mask="(99) 99999-9999"
+                    value={pedido.telefone}
+                    onChange={handleProdutoChange}
+                  >
+                    {(inputProps) => (
+                      <Form.Group style={{ marginBottom: "30px" }}>
+                        <Form.Control
+                          {...inputProps}
+                          style={campo}
+                          value={pedido?.telefone}
+                          name="telefone"
+                          type="tel"
+                          placeholder="Celular"
+                          isInvalid={!!errors.telefone}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.telefone}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    )}
+                  </InputMask>
+                  <Form.Group style={{ marginBottom: "30px" }}>
+                    <Form.Control
+                      style={campo}
+                      value={pedido?.email}
+                      onChange={handleProdutoChange}
+                      name="email"
+                      type="email"
+                      placeholder="Email"
+                      isInvalid={!!errors.email}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label style={subtituloStyle}>Endereço</Form.Label>
+
+                  <Row>
+                    <Col>
+                      <InputMask
+                        mask="99999-999"
+                        value={pedido?.endereco.cep}
+                        onChange={(e) => handleProdutoChange(e, true)}
+                        onBlur={complementarCEP}
+                      >
+                        {(inputProps) => (
+                          <Form.Group>
+                            <Form.Control
+                              {...inputProps}
+                              style={campo}
+                              name="cep"
+                              type="text"
+                              placeholder="CEP"
+                              isInvalid={!!errors.cep}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.cep}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        )}
+                      </InputMask>
+                    </Col>
+
+                    <Col>
+                      <InputMask
+                        mask="999999"
+                        value={pedido?.endereco.numero}
+                        onChange={(e) => handleProdutoChange(e, true)}
+                        maskChar=""
+                      >
+                        {(inputProps) => (
+                          <Form.Group>
+                            <Form.Control
+                              {...inputProps}
+                              style={campo}
+                              name="numero"
+                              type="text"
+                              placeholder="Numero"
+                              isInvalid={!!errors.numero}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.numero}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        )}
+                      </InputMask>
+                    </Col>
+                  </Row>
+
+                  <Form.Control
+                    style={{ ...campo, marginBottom: "30px" }}
+                    name="logradouro"
+                    value={`${pedido?.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
+                    onChange={(e) => handleProdutoChange(e, true)}
+                    type="text"
+                    placeholder="Rua / Avenida"
+                    readOnly
+                  />
+                  <Form.Control
+                    style={campo}
+                    name="bairro"
+                    value={pedido?.endereco.bairro}
+                    onChange={(e) => handleProdutoChange(e, true)}
+                    type="text"
+                    placeholder="Bairro"
+                    readOnly
+                  />
+                </Form.Group>
+
+                <div style={{ marginTop: "48px" }}>{botaoFinalizar()}</div>
+              </Form>
+            </Container>
+          </div>
+        </Row>
+        <Row
+          style={{
+            position: "relative",
+            height: "90px",
+            background: "#FDDC00",
+            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
+          }}
+        ></Row>
+      </Container>
+    );
+  }
+
+  return (
+    <>
+      {mobile ? <Mobile /> : <Desktop />};
       <LoadingModal />
-    </div>
+    </>
   );
 };
 

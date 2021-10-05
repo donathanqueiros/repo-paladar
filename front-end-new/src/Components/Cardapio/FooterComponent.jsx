@@ -10,42 +10,41 @@ const FooterComponent = () => {
   const { medium } = fontSize;
   const { red, yellow } = colors;
   const footerStyle = {
-    position: "relative",
-    zIndex: "2",
-    height: "320px",
+    maxWidth: "1232px",
+    minHeight: "320px",
     backgroundColor: red.color,
+    paddingTop: "40px",
+    paddingBottom: "80px",
   };
   const textStyle = { ...yellow, ...insani, ...medium };
   return (
-    <footer style={footerStyle}>
-      <Container style={{ paddingTop: "32px", width: "1232px" }}>
-        <Row className="text-left">
-          <Col xl="8">
-            <span style={textStyle} className="">
-              CONTATO: (14)3262-2901 / (14) 3262-7605
-            </span>
-            <br />
-            <span style={textStyle}>TODOS OS DIAS. DAS 17H À 01H.</span>
-          </Col>
-          <Col xl="4">
+    <Container style={footerStyle}>
+      <Row className="text-left">
+        <Col md="12" xl="8">
+          <span style={textStyle} className="">
+            CONTATO: (14)3262-2901 / (14) 3262-7605
+          </span>
+          <br />
+          <span style={textStyle}>TODOS OS DIAS. DAS 17H À 01H.</span>
+        </Col>
+        <Col md="12" xl="4">
+          <div>
+            <span style={textStyle}>REDES SOCIAIS:</span>
             <div>
-              <span style={textStyle}>REDES SOCIAIS:</span>
-              <div>
-                <Image
-                  style={{ margin: "0 8px", cursor: "pointer" }}
-                  src={instagram}
-                ></Image>
-                <Image
-                  style={{ marginRight: "8px", cursor: "pointer" }}
-                  src={whatsapp}
-                ></Image>
-                <Image style={{ cursor: "pointer" }} src={facebook}></Image>
-              </div>
+              <Image
+                style={{ margin: "0 8px", cursor: "pointer" }}
+                src={instagram}
+              ></Image>
+              <Image
+                style={{ marginRight: "8px", cursor: "pointer" }}
+                src={whatsapp}
+              ></Image>
+              <Image style={{ cursor: "pointer" }} src={facebook}></Image>
             </div>
-          </Col>
-        </Row>
-      </Container>
-    </footer>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

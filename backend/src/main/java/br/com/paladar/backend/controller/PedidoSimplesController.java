@@ -25,6 +25,7 @@ import br.com.paladar.backend.exception.PedidoImpossivelDespacharException;
 import br.com.paladar.backend.exception.PedidoJaCanceladoException;
 import br.com.paladar.backend.services.pedido.PedidoSimplesService;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/pedidossimples")
 public class PedidoSimplesController {

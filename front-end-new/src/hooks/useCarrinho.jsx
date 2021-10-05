@@ -4,7 +4,7 @@ export default function useCarrinho() {
   const [carrinho, setCarrinho] = useState([]);
 
   const add = (produto) => {
-    setCarrinho([...carrinho, produto]);
+    setCarrinho((prevValue) => [...prevValue, produto]);
   };
 
   const removeCarrinho = (produto) => {
