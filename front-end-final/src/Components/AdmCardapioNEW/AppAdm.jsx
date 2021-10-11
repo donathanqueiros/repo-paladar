@@ -5,8 +5,13 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import React, { useEffect, useState } from "react";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router";
-import { Link } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch,
+} from "react-router-dom";
 import "./AppAdm.css";
 import GraficosComponent from "./Components/GraficosComponent";
 import ListCategoriaComponent from "./Components/ListCategoriaComponent";
@@ -16,13 +21,14 @@ import ListProdutoComponent from "./Components/ListProdutoComponent";
 import CreateProdutoComponent from "./Components/CreateProdutoComponent";
 import UpdateProdutoComponet from "./Components/UpdateProdutoComponent";
 import CreateCategoriaComponent from "./Components/CreateCategoriaComponent";
+import { Container, Row, Col } from "react-bootstrap";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const SiderDemo = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { url, path } = useRouteMatch();
+  const { url, path, isExact, params } = useRouteMatch();
   const history = useHistory();
 
   const onCollapse = () => {
@@ -31,16 +37,21 @@ const SiderDemo = () => {
   };
 
   useEffect(() => {
-    if (path === "/adm");
+    console.log(path);
+    console.log(url);
+    console.log(isExact);
+    console.log(params);
+
+    // if (path === "/adm") history.push("/adm/dashboard");
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", padding: "0" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />}>
-            <Link to={`${path}/dashboard`}>DashBoard</Link>
+            <Link to={`${url}/dashboard`}>DashBoard</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="Pedidos">
             <Menu.Item key="3">
@@ -50,9 +61,9 @@ const SiderDemo = () => {
               <Link to={`${url}/pedidos/finalizados`}>Finalizados</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
-            <Link>Cardapio</Link>
-          </Menu.Item>
+          {/* <Menu.Item key="2" icon={<DesktopOutlined />}>
+                <Link>Cardapio</Link>
+              </Menu.Item> */}
 
           <SubMenu key="sub2" icon={<UserOutlined />} title="Formulário">
             <Menu.Item key="5">
@@ -65,8 +76,6 @@ const SiderDemo = () => {
         </Menu>
       </Sider>
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }} />
-
         <Content style={{ margin: "0 16px" }}>
           {/* <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
@@ -114,7 +123,11 @@ const SiderDemo = () => {
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2018 Created by Ant UED
+          Created by{" "}
+          <a className="pe-auto text-decoration-underline">
+            {" "}
+            Donathan Queiros{" "}
+          </a>
         </Footer>
       </Layout>
     </Layout>

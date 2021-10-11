@@ -14,19 +14,18 @@ import { Container, Row, Col } from "react-bootstrap";
 import { GlobalContextProvider } from "./context/index.jsx";
 
 const App = () => {
-  const styleGeral = {
-    width: "100%",
-    padding: "0px 0px",
-    margin: "0px 0px",
-  };
-
   return (
-    <Router>
-      <Container style={styleGeral} fluid>
+    <Container fluid>
+      <Router>
         <Switch>
           {/* <Route path="/teste" component={Teste}></Route> */}
           <GlobalContextProvider>
-            <Route path="/" exact component={AppCardapio}></Route>
+            <Row>
+              <Route path="/" exact component={AppCardapio} />
+            </Row>
+            <Row>
+              <Route path="/adm" component={AppAdm} />
+            </Row>
           </GlobalContextProvider>
 
           {/* <Route path="/admcardapio" exact component={AppAdmCardapio}></Route> */}
@@ -44,16 +43,14 @@ const App = () => {
             component={UpdateProdutoComponet}
           /> */}
           {/* <Route path='/view-employee/:id' component={ViewEmployeeComponent}></Route> */}
-          <Route path="/adm" component={AppAdm}></Route>
-
           {/* <Route
             path="/form/produto"
             exact
             component={CreateProdutoComponent}
           /> */}
         </Switch>
-      </Container>
-    </Router>
+      </Router>
+    </Container>
   );
 };
 

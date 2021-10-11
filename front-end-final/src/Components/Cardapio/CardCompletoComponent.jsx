@@ -1,9 +1,10 @@
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import BotaoCardComponent from "./BotaoCardComponent";
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import iconFechar from "../../assets/img/fechar.png";
 import { Image } from "react-bootstrap";
+import { MobileContext } from "../../context/MobileContext";
 
 const CardCompletoComponent = ({
   titulo,
@@ -14,33 +15,21 @@ const CardCompletoComponent = ({
   qtd,
   add,
   remove,
-  mobile = true,
 }) => {
   const { insani, mont } = fontFamily;
   const { red } = colors;
   const { small } = fontSize;
+  const [isMobile] = useContext(MobileContext);
 
   const imgStyle = {
-    width: 387 * 1.5,
-    height: 224 * 1.5,
+    width: "100%",
     borderRadius: "40px 40px 40px 40px",
-  };
-
-  const tituloHeaderStyle = {
-    marginLeft: "40%",
-    ...insani,
-    fontSize: "42px",
-    lineHeight: "41px",
-    textAlign: "center",
-
-    ...red,
   };
 
   const tituloStyle = {
     ...insani,
     fontSize: "32px",
     lineHeight: "41px",
-    textAlign: "center",
     ...red,
   };
 
@@ -67,7 +56,7 @@ const CardCompletoComponent = ({
       <Container
         fluid
         style={{
-          width: "794px",
+          maxWidth: "794px",
         }}
         // className="d-flex flex-column align-items-center"
       >
@@ -79,31 +68,25 @@ const CardCompletoComponent = ({
             boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
             borderRadius: "80px 80px 0px 0px",
           }}
-          className="d-flex  justify-content-center  "
         >
-          <span
-            style={tituloHeaderStyle}
-            className="d-flex align-items-center justify-content-center"
+          <Col
+            xs={{ offset: 3, span: 6 }}
+            className="d-flex justify-content-center align-items-center"
           >
-            DETALHES
-          </span>
-          <div
-            className="d-flex  align-items-center"
-            style={{
-              marginLeft: "auto",
-              marginRight: "56px",
-              cursor: "pointer",
-            }}
-            onClick={closeModal}
-          >
+            <span style={tituloStyle}>DETALHES</span>
+          </Col>
+
+          <Col className="d-flex justify-content-center align-items-center ">
             <Image
               style={{
+                cursor: "pointer",
                 width: "42px",
                 height: "42px",
               }}
+              onClick={closeModal}
               src={iconFechar}
             />
-          </div>
+          </Col>
         </Row>
         <Row
           style={{
@@ -113,8 +96,10 @@ const CardCompletoComponent = ({
           }}
           className="d-flex flex-column align-items-center"
         >
-          <div style={{ maxWidth: 387 * 1.5 }}>
-            <Image style={imgStyle} src={src}></Image>
+          <Container fluid style={{ maxWidth: 580 }}>
+            <Row>
+              <Image style={imgStyle} src={src}></Image>
+            </Row>
             <div style={{ padding: "8px 8px", paddingTop: "8px" }}>
               <span style={tituloStyle}>{titulo}</span>
             </div>
@@ -138,7 +123,7 @@ const CardCompletoComponent = ({
                 />
               </div>
             </div>
-          </div>
+          </Container>
         </Row>
 
         <Row
@@ -155,7 +140,7 @@ const CardCompletoComponent = ({
 
   function Mobile() {
     return (
-      <Container fluid style={{ backgroundColor: "white" }}>
+      <Container fluid style={{ backgroundColor: "white", minHeight: "100vh" }}>
         <Row
           style={{
             position: "relative",
@@ -165,20 +150,24 @@ const CardCompletoComponent = ({
           }}
         >
           <Col
-            xs={{ span: 7, offset: 2 }}
+            xs={{ span: 6, offset: 3 }}
             style={{
               ...insani,
               fontSize: "42px",
               lineHeight: "41px",
               ...red,
             }}
-            className="d-flex align-items-center"
+            className="d-flex justify-content-center align-items-center"
           >
             DETALHES
           </Col>
-          <Col className="d-flex align-items-center" onClick={closeModal}>
+          <Col
+            className="d-flex justify-content-center align-items-center"
+            onClick={closeModal}
+          >
             <Image
               style={{
+                cursor: "pointer",
                 width: "42px",
                 height: "42px",
               }}
@@ -187,27 +176,31 @@ const CardCompletoComponent = ({
           </Col>
         </Row>
         <Row
-          style={{ padding: "24px 0", minHeight: "600px" }}
-          className="d-flex flex-column align-items-center"
+          style={{
+            padding: "24px 0",
+            maxWidth: "500px",
+            margin: "auto",
+          }}
+          className="d-flex  justify-content-center "
         >
-          <div style={{ maxWidth: 387 * 1.5 }}>
+          <Row>
             <Image
               style={{
-                width: 387,
-                height: 224,
                 borderRadius: "40px 40px 40px 40px",
               }}
               src={src}
-            ></Image>
-            <div style={{ padding: "8px 8px", paddingTop: "8px" }}>
+            />
+          </Row>
+          <Row className="d-flex  justify-content-center ">
+            <div style={{ padding: "0px 8px", paddingTop: "16px" }}>
               <span style={tituloStyle}>{titulo}</span>
             </div>
-            <div style={{ padding: "0px 8px" }}>
+            <div style={{ padding: "0px 8px", paddingTop: "8px" }}>
               <span style={subtituloStyle}>{subtitulo}</span>
             </div>
             <div
               style={{ padding: "0px 8px", paddingTop: "8px" }}
-              className="d-flex flex-row justify-content-between align-items-end"
+              className="d-flex justify-content-between align-items-end"
             >
               <div>
                 <span style={precoStyle}>
@@ -222,7 +215,7 @@ const CardCompletoComponent = ({
                 />
               </div>
             </div>
-          </div>
+          </Row>
         </Row>
 
         <Row
@@ -237,7 +230,7 @@ const CardCompletoComponent = ({
     );
   }
 
-  return <>{mobile ? <Mobile /> : <Desktop />}</>;
+  return <>{isMobile ? Mobile() : Desktop()}</>;
 };
 
 export default CardCompletoComponent;

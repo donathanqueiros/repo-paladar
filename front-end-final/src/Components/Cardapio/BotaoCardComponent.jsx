@@ -4,7 +4,7 @@ import Menos from "../../assets/img/menos.svg";
 import Mais from "../../assets/img/mais.svg";
 import { colors, fontFamily } from "../../assets/css/Style";
 
-const BotaoCardComponent = ({ teste, style, qtd, increment, decrement }) => {
+const BotaoCardComponent = ({ style, qtd, increment, decrement }) => {
   const [quantidade, setQuantidade] = useState(0);
   const { black } = colors;
   const { mont } = fontFamily;
@@ -44,7 +44,6 @@ const BotaoCardComponent = ({ teste, style, qtd, increment, decrement }) => {
       id="botao-card"
       style={{ ...geralStyle, ...style }}
       className="d-flex flex-row"
-      Key={teste}
     >
       <div
         style={menosStyle}

@@ -2,20 +2,9 @@ import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import LabelComponent from "./LabelComponent";
 
-const CategoriaComponent = ({
-  key,
-  chave,
-  children,
-  titulo,
-  linha,
-  mobile,
-}) => {
-  var i = 1;
-  useEffect(() => {
-    console.log("chamou did");
-  }, []);
+const CategoriaComponent = ({ children, titulo, linha, mobile }) => {
   return (
-    <Container key={chave} fluid>
+    <Container fluid>
       <Row>
         <LabelComponent
           titulo={titulo}
@@ -28,9 +17,8 @@ const CategoriaComponent = ({
           if (child != null) {
             return (
               <Col
-                key={key + "-" + i++}
                 xl="4"
-                lg="6"
+                lg="4"
                 md="6"
                 className="d-flex justify-content-center"
               >

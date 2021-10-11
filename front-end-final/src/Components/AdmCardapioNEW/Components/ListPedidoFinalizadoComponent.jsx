@@ -87,20 +87,13 @@ export default () => {
   return (
     <Container>
       <Row>
-        {" "}
         <h2 className="text-center">Lista Produtos</h2>
       </Row>
       <Row>
         {Object.entries(checkBox).map((value) => {
           return (
-            <Col
-              style={{
-                padding: "0px 5px",
-              }}
-            >
+            <Col className="d-flex justify-content-center">
               <FormCheck
-                className="btn btn-primary "
-                style={{ width: "100%" }}
                 label={value[0]}
                 type={"checkbox"}
                 id={value[0]}

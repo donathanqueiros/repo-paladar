@@ -3,11 +3,13 @@ import logo from "../../assets/img/logo.png";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import carrinho from "../../assets/img/carrinho.png";
 import { Col, Container, Image, Row } from "react-bootstrap";
+import { MobileContext } from "../../context/MobileContext";
 
-const HeaderComponent = ({ showModal, mobile }) => {
+const HeaderComponent = ({ showModal }) => {
   const { red, yellow } = colors;
   const { insani } = fontFamily;
   const { big } = fontSize;
+  const [isMobile] = useContext(MobileContext);
 
   const styleHeader = {
     position: "relative",
@@ -20,15 +22,18 @@ const HeaderComponent = ({ showModal, mobile }) => {
 
   const Mobile = () => {
     return (
-      <Container style={styleHeader}>
-        <Container>
-          <Row className="d-flex justify-content-center ">
-            <img src={logo}></img>
-          </Row>
-          <Row className="d-flex justify-content-center ">
-            <span style={{ ...red, ...insani, ...big }}>CARDAPIO</span>
-          </Row>
-        </Container>
+      <Container fluid style={styleHeader}>
+        <Row className="d-flex justify-content-center ">
+          <img style={{ width: 183, height: "90px" }} src={logo}></img>
+        </Row>
+        <Row>
+          <span
+            className="d-flex justify-content-center "
+            style={{ ...red, ...insani, ...big }}
+          >
+            CARDAPIO
+          </span>
+        </Row>
       </Container>
     );
   };
@@ -60,7 +65,7 @@ const HeaderComponent = ({ showModal, mobile }) => {
     );
   }
 
-  return mobile ? <Mobile /> : <Desktop />;
+  return isMobile ? Mobile() : Desktop();
 };
 
 export default HeaderComponent;

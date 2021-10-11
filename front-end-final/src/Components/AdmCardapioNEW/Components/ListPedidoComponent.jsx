@@ -1,3 +1,4 @@
+import { Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   FormCheck,
@@ -12,6 +13,7 @@ import { useHistory } from "react-router-dom";
 import useLoading from "../../../hooks/useLoading";
 import useMessage from "../../../hooks/useMessage";
 import PedidoService from "../../../services/PedidoService";
+const { TabPane } = Tabs;
 
 export default () => {
   const [show, setShow] = useState(false);
@@ -59,18 +61,18 @@ export default () => {
       .finally(esconderLoading);
   };
 
-  useEffect(() => {
-    mostrarLoading();
-    PedidoService.getPedidosAndamento()
-      .then((res) => {
-        setPedidos(res.data);
-      })
-      .finally(esconderLoading);
+  // useEffect(() => {
+  //   mostrarLoading();
+  //   PedidoService.getPedidosAndamento()
+  //     .then((res) => {
+  //       setPedidos(res.data);
+  //     })
+  //     .finally(esconderLoading);
 
-    setInterval(() => {
-      attPedidos();
-    }, 5000);
-  }, []);
+  //   setInterval(() => {
+  //     attPedidos();
+  //   }, 5000);
+  // }, []);
 
   const viewProduto = (id) => {
     console.log(id);
@@ -151,23 +153,21 @@ export default () => {
 
   return (
     <Container fluid>
-      <Row className="flex justify-content-center">
-        <h2>Pedidos</h2>
+      <Row>
+        <Col>
+          <h2 className="d-flex justify-content-center">Pedidos</h2>
+        </Col>
       </Row>
-      <Row
-        className="btn-group d-flex justify-content-between "
-        dataToggle="buttons"
-      >
+
+      <Row>
         {Object.entries(checkBox).map((value) => {
           return (
             <Col
               style={{
-                padding: "0px 5px",
+                padding: "0px 0px",
               }}
             >
               <FormCheck
-                className="btn btn-primary "
-                style={{ width: "100%" }}
                 label={value[0]}
                 type={"checkbox"}
                 id={value[0]}

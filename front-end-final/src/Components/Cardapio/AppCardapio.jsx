@@ -4,7 +4,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import HeaderComponent from "../Cardapio/HeaderComponent";
 import FooterComponent from "../Cardapio/FooterComponent";
 import CardapioComponent from "./CardapioComponent";
-import { Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { produtosData, categoriasProdutoData } from "../../data.js";
 import useCarrinho from "../../hooks/useCarrinho";
 import ProdutoService from "../../services/ProdutoService";

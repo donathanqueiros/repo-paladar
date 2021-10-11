@@ -6,7 +6,6 @@ import CardCompletoComponent from "./CardCompletoComponent";
 import ModalComponent from "./ModalComponent";
 
 const CardPequenoComponent = ({
-  chave,
   titulo,
   subtitulo,
   preco,
@@ -90,8 +89,8 @@ const CardPequenoComponent = ({
   };
 
   return (
-    <Container Key={chave}>
-      <div Key={chave} style={cardStyle} className="d-flex flex-row">
+    <>
+      <div style={cardStyle} className="d-flex flex-row">
         <Image
           onClick={produtoDetalhes}
           style={imgStyle}
@@ -113,7 +112,6 @@ const CardPequenoComponent = ({
             </div>
             <div>
               <BotaoCardComponent
-                teste={chave}
                 qtd={qtd}
                 increment={add}
                 decrement={remove}
@@ -123,13 +121,12 @@ const CardPequenoComponent = ({
         </div>
       </div>
 
-      {/* <ModalComponent
+      <ModalComponent
         onHide={() => setShow(false)}
         className="zindex-modal"
         show={show}
       >
         <CardCompletoComponent
-          mobile={mobile}
           closeModal={() => setShow(false)}
           titulo={titulo}
           subtitulo={subtitulo}
@@ -139,8 +136,8 @@ const CardPequenoComponent = ({
           add={add}
           remove={remove}
         />
-      </ModalComponent> */}
-    </Container>
+      </ModalComponent>
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ const FooterComponent = () => {
   const { medium } = fontSize;
   const { red, yellow } = colors;
   const footerStyle = {
+    position: "relative",
     maxWidth: "1232px",
     minHeight: "320px",
     backgroundColor: red.color,

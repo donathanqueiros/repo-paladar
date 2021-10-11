@@ -6,11 +6,12 @@ import carrinhoImg from "../../assets/img/carrinho2.png";
 import { Image, Container, Col, Row } from "react-bootstrap";
 import FinalizarCompraComponent from "./FinalizarCompraComponent ";
 import { CarrinhoContext } from "../../context/CarrinhoContext";
+import { Switch } from "antd";
 
 const CarrinhoComponent = ({ mobile, closeModal }) => {
   const [carrinho, addCarrinho, removeCarrinho] = useContext(CarrinhoContext);
   const [finalizar, setFinalizar] = useState(false);
-  const [entrega, setEntrega] = useState(["Sim", "Não"]);
+  const [entrega, setEntrega] = useState(false);
 
   const geralStyle = {
     maxWidth: "794px",
@@ -31,6 +32,9 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
       )
     );
   }, [carrinho]);
+  useEffect(() => {
+    entrega ? setTaxaEntrega(5) : setTaxaEntrega(0);
+  }, [entrega]);
 
   // useEffect(() => {
   //   if (entrega === "Sim") {
@@ -87,7 +91,7 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
             borderRadius: "80px 80px 0px 0px",
           }}
         >
-          <Col md={{ offset: 3, span: 6 }}>
+          <Col xs={{ offset: 3, span: 6 }}>
             <span style={tituloStyle} className="d-flex justify-content-center">
               meu <br />
               carrinho
@@ -119,9 +123,12 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
             {carrinho.length === 0 ? <CarrinhoVazio /> : null}
             {carrinho
               .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
-              .map((prod) => {
+              .map((prod, index) => {
                 return (
-                  <Row style={{ marginBottom: "20px", width: "100%" }}>
+                  <Row
+                    key={index}
+                    style={{ marginBottom: "20px", width: "100%" }}
+                  >
                     <CardCarrinhoComponent
                       titulo={prod.nome}
                       preco={prod.preco}
@@ -228,9 +235,12 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
             {carrinho.length === 0 ? <CarrinhoVazio /> : null}
             {carrinho
               .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
-              .map((prod) => {
+              .map((prod, index) => {
                 return (
-                  <Row style={{ marginBottom: "20px", width: "100%" }}>
+                  <Row
+                    key={index}
+                    style={{ marginBottom: "20px", width: "100%" }}
+                  >
                     <CardCarrinhoComponent
                       titulo={prod.nome}
                       preco={prod.preco}
@@ -279,7 +289,15 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
               <span style={descricao}>Entrega?</span>
             </Col>
             <Col className="d-flex justify-content-end">
-              <div
+              <Switch
+                style={{ msTransitionDelay: "100" }}
+                checked={entrega}
+                checkedChildren="Sim"
+                unCheckedChildren="Não"
+                onChange={setEntrega}
+              />
+
+              {/* <div
                 style={{
                   height: "29px",
                   ...mont,
@@ -303,7 +321,7 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
                     <option value={op}>{op}</option>
                   ))}
                 </select>
-              </div>
+              </div> */}
             </Col>
           </Row>
           <Row style={{ marginTop: "4px" }}>
@@ -338,15 +356,16 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
             style={{ marginTop: "4px" }}
           >
             <div
-              className="d-flex flex-row justify-content-center align-items-center"
+              className="d-flex  justify-content-center align-items-center"
               style={{
                 marginTop: "4px",
                 width: "174px",
                 height: "75px",
                 background: "#FDDC00",
                 boxShadow: "10px 10px 30px rgba(255, 203, 71, 0.3)",
-                borderRadius: "0px",
+                borderRadius: "10px",
                 cursor: "pointer",
+                marginRight: "10px",
               }}
               onClick={() => {
                 setFinalizar(true);
@@ -395,7 +414,7 @@ const CarrinhoComponent = ({ mobile, closeModal }) => {
   };
 
   const CarrinhoComp = () => {
-    return <>{mobile ? <Mobile /> : <Desktop />};</>;
+    return <>{mobile ? Mobile() : Desktop()};</>;
   };
 
   const isFinalizar = () => {

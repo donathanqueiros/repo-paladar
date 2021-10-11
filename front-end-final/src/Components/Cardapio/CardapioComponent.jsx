@@ -13,6 +13,7 @@ import { CarrinhoContext } from "../../context/CarrinhoContext";
 import { MobileContext } from "../../context/MobileContext";
 import ProdutoService from "../../services/ProdutoService";
 import CategoriaProdutoService from "../../services/CategoriaProdutoService";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const CardapioComponent = ({
   produtos,
@@ -23,16 +24,14 @@ const CardapioComponent = ({
 }) => {
   const [activeKey, setActiveKey] = useState("cardapio");
   const [carrinho, addCarrinho, removeCarrinho] = useContext(CarrinhoContext);
-
-  // const [mobile] = useContext(MobileContext);
-  var mobile = false;
+  const { width } = useWindowDimensions();
+  const [isMobile] = useContext(MobileContext);
 
   const centroStyle = {
     margin: "auto",
     maxWidth: "1232px",
-    height: "100%",
+    minHeight: "calc(100vh - 410px)",
     paddingBottom: "120px",
-
     boxShadow:
       "10px 0px 30px rgba(0, 0, 0, 0.25), -10px 0px 30px rgba(0, 0, 0, 0.25)",
   };
@@ -78,13 +77,6 @@ const CardapioComponent = ({
   function Mobile() {
     return (
       <Container style={centroStyle}>
-        <Row>
-          <LabelComponent
-            mobile={mobile}
-            texto="Destaques"
-            linha
-          ></LabelComponent>
-        </Row>
         {/* <BannerComponent imagens={data.banner}></BannerComponent> */}
 
         {/* <CategoriaComponent titulo="MAIS VENDIDOS">
@@ -108,12 +100,7 @@ const CardapioComponent = ({
         <Row>
           {categorias.map((cat) => {
             return (
-              <CategoriaComponent
-                key={cat.nome}
-                linha
-                titulo={cat.nome}
-                mobile={mobile}
-              >
+              <CategoriaComponent key={cat.nome} linha titulo={cat.nome}>
                 {produtos.map((prod) => {
                   if (prod.categoriaProduto.id === cat.id) {
                     return (
@@ -147,7 +134,7 @@ const CardapioComponent = ({
 
   function Desktop() {
     return (
-      <Container Key="desktop-cardapio" style={centroStyle} fluid>
+      <Container style={centroStyle} fluid>
         {/* <Row>
           <LabelComponent titulo="Destaques" linha></LabelComponent>
         </Row> */}
@@ -171,43 +158,44 @@ const CardapioComponent = ({
               );
             })}
           </CategoriaComponent> */}
-        <Row key="teste">
-          {categorias.map((cat) => {
-            return (
-              <CategoriaComponent chave={cat.nome} linha titulo={cat.nome}>
-                {produtos.map((prod) => {
-                  if (prod.categoriaProduto.id === cat.id) {
-                    return (
-                      <CardPequenoComponent
-                        chave={prod.nome}
-                        mobile={mobile}
-                        titulo={prod.nome}
-                        subtitulo={prod.descricao}
-                        preco={prod.preco}
-                        src={prod.imgProduto.src}
-                        qtd={
-                          carrinho.filter((valor) => valor.id === prod.id)
-                            .length
-                        }
-                        add={() => addCarrinho(prod)}
-                        remove={() => removeCarrinho(prod)}
-                      />
-                    );
-                  }
-                })}
-              </CategoriaComponent>
-            );
-          })}
+        <Row>
+          {categorias
+            .map((cat) => {
+              return (
+                <CategoriaComponent key={cat.nome} linha titulo={cat.nome}>
+                  {produtos.map((prod) => {
+                    if (prod.categoriaProduto.id === cat.id) {
+                      return (
+                        <CardPequenoComponent
+                          key={prod.id + "-" + prod.nome}
+                          titulo={prod.nome}
+                          subtitulo={prod.descricao}
+                          preco={prod.preco}
+                          src={prod.imgProduto.src}
+                          qtd={
+                            carrinho.filter((valor) => valor.id === prod.id)
+                              .length
+                          }
+                          add={() => addCarrinho(prod)}
+                          remove={() => removeCarrinho(prod)}
+                        />
+                      );
+                    }
+                  })}
+                </CategoriaComponent>
+              );
+            })}
         </Row>
-        <CarrinhoComponent closeModal={closeModal} />
       </Container>
     );
   }
 
   return (
     <>
-      <Container fluid>{false ? <Mobile /> : <Desktop />}</Container>
-      <ModalComponent show={show} onHide={closeModal}></ModalComponent>
+      <Container fluid>{isMobile ? Mobile() : Desktop()}</Container>
+      <ModalComponent show={show} onHide={closeModal}>
+        <CarrinhoComponent mobile={isMobile} closeModal={closeModal} />
+      </ModalComponent>
     </>
   );
 };

@@ -10,9 +10,9 @@ const LabelComponent = ({ titulo, linha, mobile }) => {
 
   const linhaStyle = {
     position: "absolute",
-    left: "-122px",
+    left:0,
     width: "100vw",
-    height: "2px",
+    height: "3px",
     backgroundColor: red.color,
   };
 
@@ -26,7 +26,13 @@ const LabelComponent = ({ titulo, linha, mobile }) => {
 
   function Desktop() {
     return (
-      <Container style={{ paddingTop: "40px" }} className="d-flex flex-column">
+      <Container
+        style={{
+          paddingTop: "40px",
+          boxSizing: "border-box",
+        }}
+        className="d-flex flex-column w-100"
+      >
         <Row>
           <span
             style={{
@@ -40,13 +46,7 @@ const LabelComponent = ({ titulo, linha, mobile }) => {
             {titulo}
           </span>
         </Row>
-        <Row
-          style={{
-            position: "relative",
-          }}
-        >
-          {gerarLinha()}
-        </Row>
+        <Row>{gerarLinha()}</Row>
       </Container>
     );
   }
@@ -80,7 +80,7 @@ const LabelComponent = ({ titulo, linha, mobile }) => {
     );
   }
 
-  return <>{mobile ? <Mobile /> : <Desktop />}</>;
+  return <>{false ? Mobile() : Desktop()}</>;
 };
 
 export default LabelComponent;
