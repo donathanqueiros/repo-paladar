@@ -2,12 +2,13 @@ package br.com.paladar.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +36,13 @@ public class testeImg {
 
 	@GetMapping(value = "/{id}", produces = MediaType.IMAGE_PNG_VALUE)
 	public @ResponseBody byte[] getImageWithMediaType(@PathVariable String id) throws IOException {
+		String pathString = imgProdutoRepository.getOne(Long.parseLong(id)).getPath();
+		Path path = Paths.get(pathString);
+//		System.out.println(System.getProperty("user.dir"));
+//		InputStream in = getClass().getClassLoader().getResourceAsStream(path);
 
-		String path = imgProdutoRepository.getOne(Long.parseLong(id)).getPath();
-
-		InputStream in = getClass().getResourceAsStream(path);
-
-		return IOUtils.toByteArray(in);
+//		return IOUtils.toByteArray(in);
+		return Files.readAllBytes(path);
 	}
 
 	@PostMapping(value = "")
@@ -49,12 +51,12 @@ public class testeImg {
 		byte[] decodedImg = Base64.getDecoder().decode(base64.getBytes(StandardCharsets.UTF_8));
 
 		Long quantidade = imgProdutoRepository.count() + 1;
-		String path = new File("src/main/java/br/com/paladar/backend/imagens/" + quantidade + ".png").getAbsolutePath();
+		String path = new File(Paths.get("/imagens/").toAbsolutePath().toString() + File.separator + quantidade + ".png").getAbsolutePath();
 
 		System.out.println(path);
 		FileUtils.writeByteArrayToFile(new File(path), decodedImg);
 		ImgProduto imgSalva = imgProdutoRepository
-				.save(ImgProduto.builder().path("/br/com/paladar/backend/imagens/" + quantidade + ".png").build());
+				.save(ImgProduto.builder().path(path).build());
 		imgSalva.setSrc("http://localhost:8080/img/" + imgSalva.getId());
 
 		imgProdutoRepository.flush();

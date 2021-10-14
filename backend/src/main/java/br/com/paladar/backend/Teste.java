@@ -1,13 +1,8 @@
 package br.com.paladar.backend;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
-
-import com.intersult.code.JavaClass;
-import com.intersult.code.JavaVariable;
-import com.intersult.code.Reflector;
-
-import br.com.paladar.backend.utils.ReflectionMethod;
+import java.nio.file.Paths;
 
 public class Teste {
 
@@ -19,17 +14,16 @@ public class Teste {
 //		ReflectionMethod.nomesVariaveisParametro("func", Teste.class).forEach(v -> System.out.println(v));
 //		;
 
-		
-		System.out.println();
-		
-		Reflector r = new Reflector();
-		
-		
-		JavaClass valor2 = r.reflect(valor.getClass());
-		
-		System.out.println(valor2.equals(valor));
-
-		System.out.println(r.reflect(valor.getClass()));
+//		System.out.println();
+//		
+//		Reflector r = new Reflector();
+//		
+//		
+//		JavaClass valor2 = r.reflect(valor.getClass());
+//		
+//		System.out.println(valor2.equals(valor));
+//
+		System.out.println(Paths.get("/imagens/").toAbsolutePath().toString() + File.separator + 1 + ".png");
 
 	}
 

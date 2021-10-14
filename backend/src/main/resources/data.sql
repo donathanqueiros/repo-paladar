@@ -32,7 +32,7 @@ ALTER TABLE perfis AUTO_INCREMENT = 1;
 
 
 INSERT INTO img_produto (id,path,src) VALUES
-  (1,'/br/com/paladar/backend/imagens/2.jpeg','http://localhost:8080/img/1');
+  (1,'/br/com/paladar/backend/imagens/1.png','http://localhost:8080/img/1');
 
 INSERT INTO enderecos (logradouro,cidade, estado,bairro, numero,cep) VALUES
   ('avenida professor luiz odassi neto','agudos', 'SP', 'jardim europa',76,17129068);
