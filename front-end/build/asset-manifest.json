@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f9593c0c.chunk.css",
+    "main.js": "/static/js/main.7fe5a633.chunk.js",
+    "main.js.map": "/static/js/main.7fe5a633.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.0005639e.js",
+    "runtime-main.js.map": "/static/js/runtime-main.0005639e.js.map",
+    "static/css/2.2fa4e280.chunk.css": "/static/css/2.2fa4e280.chunk.css",
+    "static/js/2.4b61b87a.chunk.js": "/static/js/2.4b61b87a.chunk.js",
+    "static/js/2.4b61b87a.chunk.js.map": "/static/js/2.4b61b87a.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.2fa4e280.chunk.css.map": "/static/css/2.2fa4e280.chunk.css.map",
+    "static/css/main.f9593c0c.chunk.css.map": "/static/css/main.f9593c0c.chunk.css.map",
+    "static/js/2.4b61b87a.chunk.js.LICENSE.txt": "/static/js/2.4b61b87a.chunk.js.LICENSE.txt",
+    "static/media/BasicLayout.less": "/static/media/BasicLayout.cdf018c1.less",
+    "static/media/GridContent.097b6e85.less": "/static/media/GridContent.097b6e85.less",
+    "static/media/Header.less": "/static/media/Header.77e34e28.less",
+    "static/media/App.css": "/static/media/Insanibu.b802102b.ttf",
+    "static/media/ThemeColor.less": "/static/media/ThemeColor.0d51358f.less",
+    "static/media/busy.svg": "/static/media/busy.782b6cc4.svg",
+    "static/media/carrinho2.19c60e8b.png": "/static/media/carrinho2.19c60e8b.png",
+    "static/media/default.svg": "/static/media/default.b3c5970b.svg",
+    "static/media/disconnected.svg": "/static/media/disconnected.ce612307.svg",
+    "static/media/empty-icon.svg": "/static/media/empty-icon.0e5fd287.svg",
+    "static/media/empty.svg": "/static/media/empty.6a8cfdcf.svg",
+    "static/media/index.less": "/static/media/index.fa0b381f.less",
+    "static/media/index.8c12967b.less": "/static/media/index.8c12967b.less",
+    "static/media/logo.e972d9f0.png": "/static/media/logo.e972d9f0.png",
+    "static/media/mais.c31e19d1.svg": "/static/media/mais.c31e19d1.svg",
+    "static/media/menos.4311f13f.svg": "/static/media/menos.4311f13f.svg",
+    "static/media/selector-check-mark.svg": "/static/media/selector-check-mark.11465817.svg",
+    "static/media/slider.css": "/static/media/slider-thumb.3d161c84.svg",
+    "static/media/spin.svg": "/static/media/spin.a71ffb17.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0005639e.js",
+    "static/css/2.2fa4e280.chunk.css",
+    "static/js/2.4b61b87a.chunk.js",
+    "static/css/main.f9593c0c.chunk.css",
+    "static/js/main.7fe5a633.chunk.js"
+  ]
+}

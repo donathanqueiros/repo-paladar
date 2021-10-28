@@ -1,46 +1,59 @@
-import React, { useState } from "react";
-import HeaderComponent from "../Cardapio/HeaderComponent";
-import FooterComponent from "../Cardapio/FooterComponent";
+import React, { useContext, useEffect, useState } from "react";
+
+import HeaderComponent from "./HeaderComponent";
+import FooterComponent from "./FooterComponent";
 import CardapioComponent from "./CardapioComponent";
-import Sider from "antd/lib/layout/Sider";
-import Layout from "antd/lib/layout/layout";
-import { Button } from "antd";
+import { Container, Row } from "react-bootstrap";
+import ProdutoService from "../../services/ProdutoService";
+import CategoriaProdutoService from "../../services/CategoriaProdutoService";
+import ModalComponent from "./ModalComponent";
+import CarrinhoComponent from "./CarrinhoComponent";
+import { MobileContext } from "../../context/MobileContext";
 
 const AppCardapio = () => {
-  const [valor, setValor] = useState(400);
+  const [isMobile] = useContext(MobileContext);
+  const [show, setShow] = useState(false);
+  const [produtos, setProdutos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
 
-  // var value = carrinho.itens.filter((value) => value.id === id);
-  // if (value.length != 0) {
-  // setCarrinho({ itens: [...carrinho.itens, ] });
-  // }
-  // const counters = [...this.state.counters];
-  // const index = counters.indexOf(counter);
-  // counters[index] = { ...counters[index] };
-  // counters[index].value++;
-  // this.setState({ counters });
+  useEffect(() => {
+    ProdutoService.getProdutos().then((res) => {
+      setProdutos(res.data.filter((prod) => prod.ativo === true));
+    });
+    CategoriaProdutoService.getCategorias().then((res) => {
+      setCategorias(res.data);
+    });
+  }, []);
+
+  const Principal = () => {
+    return (
+      <>
+        <HeaderComponent showModal={() => setShow(true)} />
+        <CardapioComponent
+          showModal={() => setShow(true)}
+          closeModal={() => setShow(false)}
+          show={show}
+          produtos={produtos}
+          categorias={categorias}
+        />
+        <FooterComponent />
+
+        <ModalComponent show={show} onHide={() => setShow(false)}>
+          <CarrinhoComponent
+            mobile={isMobile}
+            closeModal={() => setShow(false)}
+          />
+        </ModalComponent>
+      </>
+    );
+  };
 
   return (
-    <>
-      <Layout>
-        <Layout>
-          <HeaderComponent>
-            <Button
-              onClick={() => {
-                valor === 0 ? setValor(400) : setValor(0);
-                console.log(valor);
-              }}
-            >
-              teste
-            </Button>
-          </HeaderComponent>
-          <CardapioComponent></CardapioComponent>
-          <FooterComponent></FooterComponent>
-        </Layout>
-        <Sider collapsed={true} collapsedWidth={valor} theme="light">
-          carrinho
-        </Sider>
-      </Layout>
-    </>
+    <Container key="app-cardapio" fluid>
+      <Row>
+        <Principal />
+      </Row>
+    </Container>
   );
 };
 
