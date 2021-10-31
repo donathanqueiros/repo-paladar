@@ -18,3 +18,29 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [x] Comunicação do front e back - CRUD
 - [ ] Adicionar open API - Swagger - back
 - [ ] Adicionar autenticação API - JWT 
+
+### 🛠 Tecnologias As seguintes ferramentas foram usadas na construção do projeto: 
+
+## Front-end
+-  [Node.js](https://nodejs.org/en/)
+-  [React.js](https://pt-br.reactjs.org/)
+- [Antd](https://ant.design/)
+- [Bootstrap](https://react-bootstrap.github.io/)
+- [Emotion](https://emotion.sh/)
+- [Figma](https://www.figma.com/)
+
+## Back-end
+-  [Spring boot](https://spring.io/)
+-  [Lombok](https://projectlombok.org/)
+-  [MySQL](https://www.mysql.com/) - prod
+- [H2 DB](https://www.h2database.com/html/main.html) - dev
+-  [MapStruct](https://mapstruct.org/)
+
+
+## 📝 Licença
+
+Esse projeto está sob licença MIT. Veja o arquivo [LICENÇA](LICENSE.txt) para mais detalhes.
+
+[⬆ Voltar ao topo](#repopaladar)/
+
+
