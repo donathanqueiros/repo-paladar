@@ -48,7 +48,7 @@ public class PedidoService {
 	public Pedido criarPedido(Pedido pedido) {
 		List<ProdutoPedido> produtoPedidos = pedido.getProdutos();
 		List<ProdutoPedido> produtoPedidosNovo = new ArrayList<>();
-		Set<Long> ids = produtoPedidos.stream().map(ProdutoPedido::getId).toList().stream().collect(Collectors.toSet());
+		Set<Long> ids = produtoPedidos.stream().map(ProdutoPedido::getId).collect(Collectors.toSet());
 
 		for (Long id : ids) {
 			Produto prod = produtoRepository.getOne(id);

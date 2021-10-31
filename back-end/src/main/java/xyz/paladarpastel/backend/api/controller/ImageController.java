@@ -25,6 +25,7 @@ import xyz.paladarpastel.backend.api.mapper.ImgProdutoMapper;
 import xyz.paladarpastel.backend.api.model.dto.produto.ImgProdutoDTO;
 import xyz.paladarpastel.backend.domain.model.produto.ImgProduto;
 import xyz.paladarpastel.backend.domain.repository.produto.ImgProdutoRepository;
+import xyz.paladarpastel.backend.util.OsCheck;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -54,7 +55,18 @@ public class ImageController {
 		Long quantidade = imgProdutoRepository.count() + 1;
 
 		String jarDir = System.getProperty("java.class.path").split(";")[0];
-		String path = jarDir + File.separator + "../imagens" + File.separator + quantidade + ".png";
+		String path;
+		switch (OsCheck.getOS()) {
+		case WINDOWS:
+			path = setWindows(jarDir, quantidade);
+			break;
+
+		default:
+			path = setLinux(quantidade);
+		}
+
+		System.out.println("path antes salvar => " + path);
+
 		FileUtils.writeByteArrayToFile(new File(path), decodedImg);
 		System.out.println("img path => " + path);
 
@@ -63,6 +75,15 @@ public class ImageController {
 
 		imgProdutoRepository.saveAndFlush(imgSalva);
 		return imgProdutoMapper.toDTO(imgSalva);
+	}
+
+	private String setWindows(String jarDir, Long quantidade) {
+		return (jarDir + File.separator + "..\\imagens" + File.separator + quantidade + ".png").replaceAll("/", "\\\\");
+
+	}
+
+	private String setLinux( Long quantidade) {
+		return ("imagens" + File.separator + quantidade + ".png");
 	}
 
 }

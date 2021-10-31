@@ -10,8 +10,8 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.paladar</groupId>
-	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>paladar-back</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>backend</name>
 	<description>Backend Site Paladar</description>
