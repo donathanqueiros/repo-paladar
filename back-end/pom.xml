@@ -16,7 +16,7 @@
 	<name>backend</name>
 	<description>Backend Site Paladar</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>

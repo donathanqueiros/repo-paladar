@@ -27,6 +27,9 @@ public class ProdutoForm {
 	private String descricao;
 
 	@NotNull
+	private Boolean ativo;
+
+	@NotNull
 	private BigDecimal preco;
 
 	@NotNull

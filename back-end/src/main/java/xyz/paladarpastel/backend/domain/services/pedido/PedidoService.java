@@ -47,10 +47,13 @@ public class PedidoService {
 	@Transactional
 	public Pedido criarPedido(Pedido pedido) {
 		List<ProdutoPedido> produtoPedidos = pedido.getProdutos();
+
 		List<ProdutoPedido> produtoPedidosNovo = new ArrayList<>();
+
 		Set<Long> ids = produtoPedidos.stream().map(ProdutoPedido::getId).collect(Collectors.toSet());
 
 		for (Long id : ids) {
+
 			Produto prod = produtoRepository.getOne(id);
 			if (!prod.getAtivo()) {
 				throw new ProdutoInativoException("Produto", "id", id.toString());
@@ -64,8 +67,11 @@ public class PedidoService {
 			produtoPedido.setPedido(pedido);
 			produtoPedidosNovo.add(produtoPedido);
 		}
+		
 		pedido.setProdutos(produtoPedidosNovo);
-		Pedido pedidoSalvo = pedidoRepository.saveAndFlush(pedido);
+
+		Pedido pedidoSalvo = pedidoRepository.save(pedido);
+
 		BigDecimal valorTotal = calcularValorTotal(pedidoSalvo);
 		pedidoSalvo.setTotal(valorTotal);
 
