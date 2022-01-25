@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { colors, fontFamily } from "../../assets/css/Style";
 import InputMask from "react-input-mask";
@@ -9,12 +9,13 @@ import PedidoService from "../../services/PedidoService";
 import useLoading from "../../hooks/useLoading";
 import useMessage from "../../hooks/useMessage";
 import { CarrinhoContext } from "../../context/CarrinhoContext";
+import styled from "styled-components";
 
 const FinalizarCompraComponent = ({
   frete,
   closeModal,
   voltarCarrinho,
-  mobile,
+  observacao,
 }) => {
   const { LoadingModal, esconderLoading, mostrarLoading } = useLoading();
   const { sucess, error, warning } = useMessage();
@@ -34,6 +35,7 @@ const FinalizarCompraComponent = ({
       cidade: "",
       estado: "",
     },
+    observacao,
     carrinho: carrinho?.map((prod) => prod?.id),
     frete: frete,
   });
@@ -59,7 +61,6 @@ const FinalizarCompraComponent = ({
         )
       )
       .finally(esconderLoading);
-
   };
 
   const handleProdutoChange = (e, isEndereco) => {
@@ -85,6 +86,10 @@ const FinalizarCompraComponent = ({
         [name]: null,
       });
   };
+
+  useEffect(() => {
+    console.log(pedido);
+  }, [pedido]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -145,10 +150,6 @@ const FinalizarCompraComponent = ({
       }));
     }
   };
-  const geralStyle = {
-    maxWidth: "794px",
-    backgroundColor: "#FFFFFFF",
-  };
   const { insani, mont } = fontFamily;
   const { red } = colors;
 
@@ -195,9 +196,10 @@ const FinalizarCompraComponent = ({
 
     if (!validateEmail(email)) newErrors.email = "Email Invalído";
 
-    if (!cepValido) newErrors.cep = "CEP Invalído";
-
-    if (!numero || numero === "") newErrors.numero = "Não pode ser vazio!";
+    if (!!frete) {
+      if (!cepValido) newErrors.cep = "CEP Invalído";
+      if (!numero || numero === "") newErrors.numero = "Não pode ser vazio!";
+    }
 
     return newErrors;
   };
@@ -239,17 +241,10 @@ const FinalizarCompraComponent = ({
     );
   };
 
-  const Desktop = () => {
-    return (
-      <Container style={geralStyle} fluid>
-        <Row
-          style={{
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
-            borderRadius: "80px 80px 0px 0px",
-          }}
-        >
+  return (
+    <>
+      <StyledContainer fluid>
+        <Header>
           <Col className="d-flex justify-content-around align-items-center">
             <Image
               style={{
@@ -274,8 +269,8 @@ const FinalizarCompraComponent = ({
               src={iconFechar}
             />
           </Col>
-        </Row>
-        <Row style={{ padding: "24px 0", backgroundColor: "white" }}>
+        </Header>
+        <Body>
           <div
             style={{
               margin: "auto",
@@ -290,8 +285,8 @@ const FinalizarCompraComponent = ({
                     <Form.Label style={subtituloStyle}>Informações</Form.Label>
                     <Form.Control
                       style={campoStyle}
-                      value={pedido.nome}
-                      onChange={handleProdutoChange}
+                      value={pedido?.nome}
+                      onChange={(e) => handleProdutoChange(e)}
                       name="nome"
                       type="text"
                       placeholder="Nome"
@@ -303,8 +298,7 @@ const FinalizarCompraComponent = ({
                   </Form.Group>
                   <InputMask
                     mask="(99) 99999-9999"
-                    value={pedido.telefone}
-                    onChange={handleProdutoChange}
+                    onChange={(e) => handleProdutoChange(e)}
                   >
                     {(inputProps) => (
                       <Form.Group style={{ marginBottom: "30px" }}>
@@ -313,6 +307,7 @@ const FinalizarCompraComponent = ({
                           style={campoStyle}
                           value={pedido?.telefone}
                           name="telefone"
+                          onChange={(e) => handleProdutoChange(e)}
                           type="tel"
                           placeholder="Celular"
                           isInvalid={!!errors.telefone}
@@ -327,7 +322,7 @@ const FinalizarCompraComponent = ({
                     <Form.Control
                       style={campoStyle}
                       value={pedido?.email}
-                      onChange={handleProdutoChange}
+                      onChange={(e) => handleProdutoChange(e)}
                       name="email"
                       type="email"
                       placeholder="Email"
@@ -338,87 +333,89 @@ const FinalizarCompraComponent = ({
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Form.Group>
-                <Form.Group>
-                  <Form.Label style={subtituloStyle}>Endereço</Form.Label>
+                {frete && (
+                  <Form.Group>
+                    <Form.Label style={subtituloStyle}>Endereço</Form.Label>
 
-                  <Row>
-                    <Col>
-                      <InputMask
-                        mask="99999-999"
-                        value={pedido?.endereco.cep}
-                        onChange={(e) => {
-                          handleProdutoChange(e, true);
-                          if (
-                            pedido?.endereco.cep.replace(/_/g, "").length == 9
-                          ) {
-                            complementarCEP();
-                          }
-                        }}
-                        onBlur={complementarCEP}
-                      >
-                        {(inputProps) => (
-                          <Form.Group>
-                            <Form.Control
-                              {...inputProps}
-                              style={campoStyle}
-                              name="cep"
-                              type="text"
-                              placeholder="CEP"
-                              isInvalid={!!errors.cep}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.cep}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        )}
-                      </InputMask>
-                    </Col>
+                    <Row>
+                      <Col>
+                        <InputMask
+                          mask="99999-999"
+                          value={pedido?.endereco?.cep}
+                          onChange={(e) => {
+                            handleProdutoChange(e, true);
+                            if (
+                              pedido?.endereco.cep.replace(/_/g, "").length == 9
+                            ) {
+                              complementarCEP();
+                            }
+                          }}
+                          onBlur={complementarCEP}
+                        >
+                          {(inputProps) => (
+                            <Form.Group>
+                              <Form.Control
+                                {...inputProps}
+                                style={campoStyle}
+                                name="cep"
+                                type="text"
+                                placeholder="CEP"
+                                isInvalid={!!errors.cep}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors.cep}
+                              </Form.Control.Feedback>
+                            </Form.Group>
+                          )}
+                        </InputMask>
+                      </Col>
 
-                    <Col>
-                      <InputMask
-                        mask="999999"
-                        value={pedido?.endereco.numero}
-                        onChange={(e) => handleProdutoChange(e, true)}
-                        maskChar=""
-                      >
-                        {(inputProps) => (
-                          <Form.Group style={{ marginBottom: "30px" }}>
-                            <Form.Control
-                              {...inputProps}
-                              style={campoStyle}
-                              name="numero"
-                              type="text"
-                              placeholder="Numero"
-                              isInvalid={!!errors.numero}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.numero}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        )}
-                      </InputMask>
-                    </Col>
-                  </Row>
+                      <Col>
+                        <InputMask
+                          mask="999999"
+                          value={pedido?.endereco?.numero}
+                          onChange={(e) => handleProdutoChange(e, true)}
+                          maskChar=""
+                        >
+                          {(inputProps) => (
+                            <Form.Group style={{ marginBottom: "30px" }}>
+                              <Form.Control
+                                {...inputProps}
+                                style={campoStyle}
+                                name="numero"
+                                type="text"
+                                placeholder="Numero"
+                                isInvalid={!!errors.numero}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors.numero}
+                              </Form.Control.Feedback>
+                            </Form.Group>
+                          )}
+                        </InputMask>
+                      </Col>
+                    </Row>
 
-                  <Form.Control
-                    style={{ ...campoStyle, marginBottom: "30px" }}
-                    name="logradouro"
-                    value={`${pedido?.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
-                    onChange={(e) => handleProdutoChange(e, true)}
-                    type="text"
-                    placeholder="Rua / Avenida"
-                    readOnly
-                  />
-                  <Form.Control
-                    style={campoStyle}
-                    name="bairro"
-                    value={pedido?.endereco.bairro}
-                    onChange={(e) => handleProdutoChange(e, true)}
-                    type="text"
-                    placeholder="Bairro"
-                    readOnly
-                  />
-                </Form.Group>
+                    <Form.Control
+                      style={{ ...campoStyle, marginBottom: "30px" }}
+                      name="logradouro"
+                      value={`${pedido?.endereco?.logradouro} - ${pedido?.endereco?.cidade} - ${pedido?.endereco?.estado} `}
+                      onChange={(e) => handleProdutoChange(e, true)}
+                      type="text"
+                      placeholder="Rua / Avenida"
+                      readOnly
+                    />
+                    <Form.Control
+                      style={campoStyle}
+                      name="bairro"
+                      value={pedido?.endereco?.bairro}
+                      onChange={(e) => handleProdutoChange(e, true)}
+                      type="text"
+                      placeholder="Bairro"
+                      readOnly
+                    />
+                  </Form.Group>
+                )}
 
                 <div
                   className="d-flex justify-content-end"
@@ -429,226 +426,41 @@ const FinalizarCompraComponent = ({
               </Form>
             </Container>
           </div>
-        </Row>
-        <Row
-          style={{
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
-            borderRadius: "0px 0px 80px 80px",
-          }}
-        ></Row>
-      </Container>
-    );
-  };
-
-  function Mobile() {
-    return (
-      <Container fluid>
-        <Row
-          style={{
-            position: "relative",
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
-          }}
-        >
-          <Col className="d-flex  justify-content-around align-items-center">
-            <Image
-              onClick={voltarCarrinho}
-              style={{
-                width: "42px",
-                height: "42px",
-                cursor: "pointer",
-              }}
-              src={iconVoltar}
-            />
-            <span style={tituloStyle}>
-              Finalizar <br />
-              Pedido
-            </span>
-            <Image
-              onClick={closeModal}
-              style={{
-                width: "42px",
-                height: "42px",
-                cursor: "pointer",
-              }}
-              src={iconFechar}
-            />
-          </Col>
-        </Row>
-        <Row
-          style={{
-            padding: "24px 0",
-            backgroundColor: "white",
-          }}
-        >
-          <div
-            style={{
-              margin: "auto",
-              width: "590px",
-            }}
-            className="d-flex flex-column align-items-center"
-          >
-            <Container>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                  <Form.Group style={{ marginBottom: "30px" }}>
-                    <Form.Label style={subtituloStyle}>Informações</Form.Label>
-                    <Form.Control
-                      style={campoStyle}
-                      value={pedido?.nome}
-                      onChange={handleProdutoChange}
-                      name="nome"
-                      type="text"
-                      placeholder="Nome"
-                      isInvalid={!!errors.nome}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.nome}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <InputMask
-                    mask="(99) 99999-9999"
-                    value={pedido.telefone}
-                    onChange={handleProdutoChange}
-                  >
-                    {(inputProps) => (
-                      <Form.Group style={{ marginBottom: "30px" }}>
-                        <Form.Control
-                          {...inputProps}
-                          style={campoStyle}
-                          value={pedido?.telefone}
-                          name="telefone"
-                          type="tel"
-                          placeholder="Celular"
-                          isInvalid={!!errors.telefone}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.telefone}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    )}
-                  </InputMask>
-                  <Form.Group style={{ marginBottom: "30px" }}>
-                    <Form.Control
-                      style={campoStyle}
-                      value={pedido?.email}
-                      onChange={handleProdutoChange}
-                      name="email"
-                      type="email"
-                      placeholder="Email"
-                      isInvalid={!!errors.email}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.email}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label style={subtituloStyle}>Endereço</Form.Label>
-
-                  <Row>
-                    <Col>
-                      <InputMask
-                        mask="99999-999"
-                        value={pedido?.endereco.cep}
-                        onChange={(e) => handleProdutoChange(e, true)}
-                        onBlur={complementarCEP}
-                      >
-                        {(inputProps) => (
-                          <Form.Group>
-                            <Form.Control
-                              {...inputProps}
-                              style={campoStyle}
-                              name="cep"
-                              type="text"
-                              placeholder="CEP"
-                              isInvalid={!!errors.cep}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.cep}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        )}
-                      </InputMask>
-                    </Col>
-
-                    <Col>
-                      <InputMask
-                        mask="999999"
-                        value={pedido?.endereco.numero}
-                        onChange={(e) => handleProdutoChange(e, true)}
-                        maskChar=""
-                      >
-                        {(inputProps) => (
-                          <Form.Group style={{ marginBottom: "30px" }}>
-                            <Form.Control
-                              {...inputProps}
-                              style={campoStyle}
-                              name="numero"
-                              type="text"
-                              placeholder="Numero"
-                              isInvalid={!!errors.numero}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.numero}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        )}
-                      </InputMask>
-                    </Col>
-                  </Row>
-
-                  <Form.Control
-                    style={{ ...campoStyle, marginBottom: "30px" }}
-                    name="logradouro"
-                    value={`${pedido?.endereco.logradouro} - ${pedido.endereco.cidade} - ${pedido.endereco.estado} `}
-                    onChange={(e) => handleProdutoChange(e, true)}
-                    type="text"
-                    placeholder="Rua / Avenida"
-                    readOnly
-                  />
-                  <Form.Control
-                    style={campoStyle}
-                    name="bairro"
-                    value={pedido?.endereco.bairro}
-                    onChange={(e) => handleProdutoChange(e, true)}
-                    type="text"
-                    placeholder="Bairro"
-                    readOnly
-                  />
-                </Form.Group>
-
-                <Row
-                  className="d-flex justify-content-end"
-                  style={{ marginTop: "48px" }}
-                >
-                  {botaoFinalizar()}
-                </Row>
-              </Form>
-            </Container>
-          </div>
-        </Row>
-        <Row
-          style={{
-            position: "relative",
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
-          }}
-        ></Row>
-      </Container>
-    );
-  }
-
-  return (
-    <>
-      {mobile ? Mobile() : Desktop()};
+        </Body>
+        <Footer />
+      </StyledContainer>
       <LoadingModal />
     </>
   );
 };
+
+const StyledContainer = styled(Container)`
+  max-width: 794px;
+`;
+const Header = styled(Row)`
+  height: 90px;
+  background: #fddc00;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 80px 80px 0px 0px;
+
+  @media (max-width: 794px) {
+    border-radius: 0px;
+  }
+`;
+
+const Body = styled(Row)`
+  padding: 24px 0;
+  background-color: white;
+`;
+const Footer = styled(Row)`
+  height: 90px;
+  background: #fddc00;
+  box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 0px 0px 80px 80px;
+
+  @media (max-width: 794px) {
+    border-radius: 0px;
+  }
+`;
 
 export default FinalizarCompraComponent;

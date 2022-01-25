@@ -29,7 +29,7 @@ public class PedidoForm {
 
 	private Endereco endereco;
 
-//	private String observacao;
+	private String observacao;
 
 	@NotNull
 	private List<Long> carrinho;

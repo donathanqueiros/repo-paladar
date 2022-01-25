@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AppCardapio from "./components/cardapio/AppCardapio";
 import "antd/dist/antd.css";
 import AppAdm from "./components/admCardapio/AppAdm.jsx";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { GlobalContextProvider } from "./context/index.jsx";
 
 const App = () => {

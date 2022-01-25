@@ -27,10 +27,6 @@ export default () => {
     PedidoService.getPedidos().then((res) => {
       setPedidos(res.data);
     });
-
-    setInterval(() => {
-      attPedidos();
-    }, 5000);
   }, []);
 
   const attPedidos = () => {

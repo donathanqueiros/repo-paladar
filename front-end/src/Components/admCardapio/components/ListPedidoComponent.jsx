@@ -68,10 +68,6 @@ export default () => {
         setPedidos(res.data);
       })
       .finally(esconderLoading);
-
-    setInterval(() => {
-      attPedidos();
-    }, 5000);
   }, []);
 
   const despacharPedido = (id) => {
@@ -106,24 +102,23 @@ export default () => {
   const renderProdutosPedido = (pedido) => {
     var { produtos } = pedido;
 
-    return produtos
-      .map((prod) => {
-        return (
-          <span>
-            <b>{prod.quantidade}</b>
-            {" - "}
-            <b>{prod.nome}</b>
-            {" - "}
-            <b>
-              {parseFloat(prod.quantidade * prod.preco)
-                .toFixed(2)
-                .replace(".", ",")}
-            </b>
+    return produtos.map((prod) => {
+      return (
+        <span>
+          <b>{prod.quantidade}</b>
+          {" - "}
+          <b>{prod.nome}</b>
+          {" - "}
+          <b>
+            {parseFloat(prod.quantidade * prod.preco)
+              .toFixed(2)
+              .replace(".", ",")}
+          </b>
 
-            <br />
-          </span>
-        );
-      });
+          <br />
+        </span>
+      );
+    });
   };
 
   function textButton(status) {
@@ -211,11 +206,15 @@ export default () => {
                   <td className="align-middle">
                     {pedido.entrega ? "Sim" : "Não"}
                   </td>
-                  <td className="align-middle">
-                    {renderProdutosPedido(pedido)}
+                  <td className="align-middle" style={{ maxWidth: "200px" }}>
+                    {renderProdutosPedido(pedido)}{" "}
+                    {/* {pedido.observacao && `obs: "${pedido.observacao}"`} */}
+                    {pedido.observacao &&
+                      `obs: "gostaria de adiconar aquele item ao pedido asdssad  asdsad asdas das das das s das d sd"`}
                   </td>
                   <td className="align-middle">
-                    {parseFloat(pedido.total).toFixed(2).replace(".", ",")}
+                    {"R$ " +
+                      parseFloat(pedido.total).toFixed(2).replace(".", ",")}
                   </td>
                   <td className="align-middle">{pedido.status}</td>
                   <td className="align-middle">

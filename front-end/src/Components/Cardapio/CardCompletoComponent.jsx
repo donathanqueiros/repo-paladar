@@ -5,6 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import iconFechar from "../../assets/img/fechar.png";
 import { Image } from "react-bootstrap";
 import { MobileContext } from "../../context/MobileContext";
+import styled from "styled-components";
 
 const CardCompletoComponent = ({
   titulo,
@@ -19,7 +20,6 @@ const CardCompletoComponent = ({
   const { insani, mont } = fontFamily;
   const { red } = colors;
   const { small } = fontSize;
-  const [isMobile] = useContext(MobileContext);
 
   const imgStyle = {
     maxWidth: "100%",
@@ -52,198 +52,100 @@ const CardCompletoComponent = ({
     ...red,
   };
 
-  function Desktop() {
-    return (
-      <Container
-        fluid
-        style={{
-          maxWidth: "794px",
-        }}
-        // className="d-flex flex-column align-items-center"
-      >
-        <Row
-          style={{
-            position: "relative",
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
-            borderRadius: "80px 80px 0px 0px",
-          }}
+  return (
+    <StyledContainer fluid>
+      <Header>
+        <Col
+          xs={{ offset: 3, span: 6 }}
+          className="d-flex justify-content-center align-items-center"
         >
-          <Col
-            xs={{ offset: 3, span: 6 }}
-            className="d-flex justify-content-center align-items-center"
-          >
-            <span style={tituloStyle}>DETALHES</span>
-          </Col>
+          <span style={tituloStyle}>DETALHES</span>
+        </Col>
 
-          <Col className="d-flex justify-content-center align-items-center ">
-            <Image
-              style={{
-                cursor: "pointer",
-                width: "42px",
-                height: "42px",
-              }}
-              onClick={closeModal}
-              src={iconFechar}
-            />
-          </Col>
-        </Row>
-        <Row
-          style={{
-            padding: "24px 0",
-            minHeight: "400px",
-            backgroundColor: "white",
-          }}
-          className="d-flex flex-column align-items-center"
-        >
-          <Container fluid style={{ maxWidth: 580 }}>
-            <Row>
-              <div
-                className="d-flex flex-row justify-content-center align-items-end"
-                style={{ width: "100%", maxHeight: "400px" }}
-              >
-                <Image style={imgStyle} src={src} />
-              </div>
-            </Row>
-            <Row>
-              <div style={{ padding: "8px 8px", paddingTop: "8px" }}>
-                <span style={tituloStyle}>{titulo}</span>
-              </div>
-              <div style={{ padding: "0px 8px" }}>
-                <span style={subtituloStyle}>{subtitulo}</span>
-              </div>
-              <div
-                style={{ padding: "0px 8px", paddingTop: "8px" }}
-                className="d-flex flex-row justify-content-between align-items-end"
-              >
-                <div>
-                  <span style={precoStyle}>
-                    R$ {parseFloat(preco).toFixed(2)}
-                  </span>
-                </div>
-                <div>
-                  <BotaoCardComponent
-                    qtd={qtd}
-                    increment={add}
-                    decrement={remove}
-                  />
-                </div>
-              </div>
-            </Row>
-          </Container>
-        </Row>
-
-        <Row
-          style={{
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
-            borderRadius: "0px 0px 80px 80px",
-          }}
-        />
-      </Container>
-    );
-  }
-
-  function Mobile() {
-    return (
-      <Container fluid style={{ backgroundColor: "white", minHeight: "100vh" }}>
-        <Row
-          style={{
-            position: "relative",
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.15)",
-          }}
-        >
-          <Col
-            xs={{ span: 6, offset: 3 }}
+        <Col className="d-flex justify-content-center align-items-center ">
+          <Image
             style={{
-              ...insani,
-              fontSize: "42px",
-              lineHeight: "41px",
-              ...red,
+              cursor: "pointer",
+              width: "42px",
+              height: "42px",
             }}
-            className="d-flex justify-content-center align-items-center"
-          >
-            DETALHES
-          </Col>
-          <Col
-            className="d-flex justify-content-center align-items-center"
             onClick={closeModal}
-          >
-            <Image
-              style={{
-                cursor: "pointer",
-                width: "42px",
-                height: "42px",
-              }}
-              src={iconFechar}
-            />
-          </Col>
-        </Row>
-        <Row
-          style={{
-            padding: "24px 0",
-            maxWidth: "500px",
-            minHeight: "calc(100vh - 180px)",
-            margin: "0 auto",
-          }}
-          className="d-flex flex-column justify-content-start align-items-center"
-        >
-            <Row>
-              <div
-                className="d-flex flex-row justify-content-center align-items-end"
-                style={{ width: "100%", maxHeight: "400px" }}
-              >
-                <Image
-                  style={{
-                    borderRadius: "40px 40px 40px 40px",
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                  }}
-                  src={src}
-                />
-              </div>
-            </Row>
+            src={iconFechar}
+          />
+        </Col>
+      </Header>
+      <Body className="d-flex flex-column align-items-center">
+        <Container fluid style={{ maxWidth: 580 }}>
           <Row>
-            <Row style={{ marginTop: "8px" }}>
+            <div
+              className="d-flex flex-row justify-content-center align-items-end"
+              style={{ width: "100%", maxHeight: "400px" }}
+            >
+              <Image style={imgStyle} src={src} />
+            </div>
+          </Row>
+          <Row>
+            <div>
               <span style={tituloStyle}>{titulo}</span>
-            </Row>
-            <Row style={{ marginTop: "4px" }}>
+            </div>
+            <div>
               <span style={subtituloStyle}>{subtitulo}</span>
-            </Row>
-            <Row style={{ marginTop: "32px" }}>
-              <Col>
+            </div>
+            <div className="d-flex flex-row justify-content-between align-items-end">
+              <div>
                 <span style={precoStyle}>
                   R$ {parseFloat(preco).toFixed(2)}
                 </span>
-              </Col>
-              <Col className="d-flex justify-content-end ">
+              </div>
+              <div>
                 <BotaoCardComponent
                   qtd={qtd}
                   increment={add}
                   decrement={remove}
                 />
-              </Col>
-            </Row>
+              </div>
+            </div>
           </Row>
-        </Row>
+        </Container>
+      </Body>
 
-        <Row
-          style={{
-            position: "relative",
-            height: "90px",
-            background: "#FDDC00",
-            boxShadow: "0px -10px 30px rgba(0, 0, 0, 0.15)",
-          }}
-        ></Row>
-      </Container>
-    );
-  }
-
-  return <>{isMobile ? Mobile() : Desktop()}</>;
+      <Footer />
+    </StyledContainer>
+  );
 };
+
+const StyledContainer = styled(Container)`
+  max-width: 794px;
+
+  @media (max-width: 794px) {
+    padding: 0px 24px;
+  }
+`;
+const Header = styled(Row)`
+  position: relative;
+  height: 90px;
+  background: #fddc00;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 80px 80px 0px 0px;
+
+  @media (max-width: 794px) {
+    border-radius: 0px 0px 0px 0px;
+  }
+`;
+const Body = styled(Row)`
+  padding: 24px 0;
+  background-color: white;
+`;
+
+const Footer = styled(Row)`
+  height: 90px;
+  background: #fddc00;
+  box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 0px 0px 80px 80px;
+
+  @media (max-width: 794px) {
+    border-radius: 0px;
+  }
+`;
 
 export default CardCompletoComponent;

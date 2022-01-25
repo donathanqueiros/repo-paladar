@@ -12,6 +12,7 @@ const ModalComponent = ({ styleModal, show, onHide, children }) => {
     height: "100%",
     overflow: "auto",
     padding: "0px",
+    margin: "0px",
     backgroundColor: "rgba(17, 0, 17, 0.4)",
   });
 
@@ -35,13 +36,7 @@ const ModalComponent = ({ styleModal, show, onHide, children }) => {
       id="modal"
       style={Object.assign(modalStyleDefault, styleModal)}
     >
-      <Row
-        style={{
-          margin: "auto",
-        }}
-      >
-        {children}
-      </Row>
+      <Row>{children}</Row>
     </Container>
   );
 };

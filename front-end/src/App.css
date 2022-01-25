@@ -22,6 +22,17 @@
 
 } */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
 @font-face {
   font-family: "Insanibu";
   src: local("Insanibu"), url(assets/fonts/Insanibu.ttf) format("truetype");
@@ -30,5 +41,3 @@
 .cursor-pointer {
   cursor: pointer;
 }
-
-

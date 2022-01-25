@@ -46,10 +46,6 @@ export default () => {
         setPedidos(res.data);
       })
       .finally(esconderLoading);
-
-    setInterval(() => {
-      attPedidos();
-    }, 5000);
   }, []);
 
   const attPedidos = () => {

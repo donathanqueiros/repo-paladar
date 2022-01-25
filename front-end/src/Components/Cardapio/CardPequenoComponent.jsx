@@ -18,8 +18,6 @@ const CardPequenoComponent = ({
   const { small } = fontSize;
   const { red, black } = colors;
 
-  const srcStatic = src;
-
   const cardStyle = {
     marginTop: "40px",
     maxWidth: "387px",
@@ -91,11 +89,7 @@ const CardPequenoComponent = ({
   return (
     <>
       <div style={cardStyle} className="d-flex flex-row">
-        <Image
-          onClick={produtoDetalhes}
-          style={imgStyle}
-          src={srcStatic}
-        ></Image>
+        <Image onClick={produtoDetalhes} style={imgStyle} src={src}></Image>
         <div style={textStyle} className="flex-col ">
           <span onClick={produtoDetalhes} style={tituloStyle}>
             {titulo}
