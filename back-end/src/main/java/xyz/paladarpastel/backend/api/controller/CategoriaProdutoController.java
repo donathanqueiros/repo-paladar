@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import xyz.paladarpastel.backend.api.exception.ObjetoJaExisteException;
+import xyz.paladarpastel.backend.api.exception.EntidadeJaExisteException;
 import xyz.paladarpastel.backend.api.mapper.CategoriaProdutoMapper;
 import xyz.paladarpastel.backend.api.model.dto.produto.CategoriaProdutoDTO;
 import xyz.paladarpastel.backend.api.model.form.produto.CategoriaProdutoForm;
@@ -45,7 +45,7 @@ public class CategoriaProdutoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CategoriaProdutoDTO createCategoriaProduto(@RequestBody @Valid CategoriaProdutoForm categoriaProdutoForm)
-			throws ObjetoJaExisteException {
+			throws EntidadeJaExisteException {
 		var categoriaProduto = categoriaProdutoMapper.toModel(categoriaProdutoForm);
 		var categoriaProdutoCriada = categoriaProdutoService.criarCategoriaProduto(categoriaProduto);
 		return categoriaProdutoMapper.toDTO(categoriaProdutoCriada);

@@ -8,57 +8,80 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import xyz.paladarpastel.backend.api.exception.ObjetoJaExisteException;
-import xyz.paladarpastel.backend.api.exception.ObjetoNaoEncotradoException;
+import xyz.paladarpastel.backend.api.exception.EntidadeJaExisteException;
+import xyz.paladarpastel.backend.api.exception.EntidadeNaoEncotradoException;
+import xyz.paladarpastel.backend.api.exception.ImageNaoEncontrada;
 import xyz.paladarpastel.backend.api.model.dto.pedido.QuantidadeVendidaDTO;
 import xyz.paladarpastel.backend.domain.model.produto.CategoriaProduto;
+import xyz.paladarpastel.backend.domain.model.produto.ImgProduto;
 import xyz.paladarpastel.backend.domain.model.produto.Produto;
+import xyz.paladarpastel.backend.domain.repository.produto.ImgProdutoRepository;
 import xyz.paladarpastel.backend.domain.repository.produto.ProdutoRepository;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ProdutoService {
 
-	private final ProdutoRepository produtoRepository;
+	private ProdutoRepository produtoRepository;
+
+	private CategoriaProdutoService categoriaProdutoService;
+
+	private ImgProdutoRepository imgProdutoRepository;
 
 	public List<Produto> todosProdutos() {
 		return produtoRepository.findAll();
 	}
 
-	public Produto criarProduto(Produto produto) throws ObjetoJaExisteException {
+	public Produto criarProduto(Produto produto) throws EntidadeJaExisteException {
 		verificaJaSeExiste(produto.getNome());
+
+		CategoriaProduto categoriaProduto = categoriaProdutoService
+				.verificaSeExiste(produto.getCategoriaProduto().getId());
+
+		ImgProduto imgProduto = imgProdutoRepository.findById(produto.getImgProduto().getId())
+				.orElseThrow(() -> new ImageNaoEncontrada(
+						String.format("Image com o id: %d não encontrada", produto.getImgProduto().getId())));
+
+		produto.setCategoriaProduto(categoriaProduto);
+		produto.setImgProduto(imgProduto);
+
 		return produtoRepository.save(produto);
 	}
 
-	public Produto buscarPorId(Long id) throws ObjetoNaoEncotradoException {
-		return produtoRepository.findById(id)
-				.orElseThrow(() -> new ObjetoNaoEncotradoException(Produto.class.getName(), "id", id.toString()));
+	public Produto buscarPorId(Long id) throws EntidadeNaoEncotradoException {
+		return verificaSeExiste(id);
 	}
 
-	public List<Produto> buscarPorCategoria(Long id) throws ObjetoNaoEncotradoException {
+	public List<Produto> buscarPorCategoria(Long id) {
 		return produtoRepository.findByCategoriaProduto(CategoriaProduto.builder().id(id).build());
 	}
 
-	public Produto atualizarProduto(Long id, Produto produto) throws ObjetoNaoEncotradoException {
+	public Produto atualizarProduto(Long id, Produto produto) {
+
 		verificaSeExiste(id);
+		categoriaProdutoService.verificaSeExiste(produto.getCategoriaProduto().getId());
+
+		imgProdutoRepository.findById(produto.getImgProduto().getId()).orElseThrow(() -> new ImageNaoEncontrada(
+				String.format("Image com o id: %d não encontrada", produto.getImgProduto().getId())));
+
 		produto.setId(id);
 		return produtoRepository.save(produto);
 	}
 
-	public void deletarPorId(Long id) throws ObjetoNaoEncotradoException {
+	public void deletarPorId(Long id) throws EntidadeNaoEncotradoException {
 		verificaSeExiste(id);
 		produtoRepository.deleteById(id);
 	}
 
-	private Produto verificaSeExiste(Long id) throws ObjetoNaoEncotradoException {
-		return produtoRepository.findById(id)
-				.orElseThrow(() -> new ObjetoNaoEncotradoException(Produto.class.getName(), "id", id.toString()));
+	private Produto verificaSeExiste(Long id) throws EntidadeNaoEncotradoException {
+		return produtoRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncotradoException(String.format("Produto com o id %d não existe", id)));
 	}
 
-	private void verificaJaSeExiste(String nome) throws ObjetoJaExisteException {
+	private void verificaJaSeExiste(String nome) throws EntidadeJaExisteException {
 		Optional<Produto> produto = produtoRepository.findByNome(nome);
 		if (produto.isPresent()) {
-			throw new ObjetoJaExisteException(Produto.class.getName(), "nome", nome);
+			throw new EntidadeJaExisteException(String.format("Produto com o nome %s já existe", nome));
 		}
 	}
 

@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import xyz.paladarpastel.backend.api.exception.ObjetoNaoEncotradoException;
+import xyz.paladarpastel.backend.api.exception.EntidadeNaoEncotradoException;
 import xyz.paladarpastel.backend.api.exception.ProdutoInativoException;
 import xyz.paladarpastel.backend.api.mapper.ProdutoMapper;
 import xyz.paladarpastel.backend.domain.exception.PedidoImpossivelDespacharException;
@@ -54,9 +54,11 @@ public class PedidoService {
 
 		for (Long id : ids) {
 
-			Produto prod = produtoRepository.getOne(id);
+			Produto prod = produtoRepository.findById(id).orElseThrow(
+					() -> new EntidadeNaoEncotradoException(String.format("Não existe um produto com id: %d", id)));
+
 			if (!prod.getAtivo()) {
-				throw new ProdutoInativoException("Produto", "id", id.toString());
+				throw new ProdutoInativoException(String.format("Produto com o id %d esta inativo ", id));
 			}
 
 			ProdutoPedido produtoPedido = produtoMapper.toModel(prod);
@@ -67,7 +69,7 @@ public class PedidoService {
 			produtoPedido.setPedido(pedido);
 			produtoPedidosNovo.add(produtoPedido);
 		}
-		
+
 		pedido.setProdutos(produtoPedidosNovo);
 
 		Pedido pedidoSalvo = pedidoRepository.save(pedido);
@@ -104,9 +106,9 @@ public class PedidoService {
 		pedidoRepository.save(pedido);
 	}
 
-	private Pedido verificaSeExiste(Long id) throws ObjetoNaoEncotradoException {
-		return pedidoRepository.findById(id)
-				.orElseThrow(() -> new ObjetoNaoEncotradoException(Pedido.class.getName(), "id", id.toString()));
+	private Pedido verificaSeExiste(Long id) throws EntidadeNaoEncotradoException {
+		return pedidoRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncotradoException(String.format("Pedido com o id %d não existe", id)));
 	}
 
 }

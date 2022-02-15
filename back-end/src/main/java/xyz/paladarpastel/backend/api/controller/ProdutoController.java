@@ -19,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import xyz.paladarpastel.backend.api.exception.ObjetoJaExisteException;
+import xyz.paladarpastel.backend.api.exception.CategoriaProdutoNaoEncotrado;
+import xyz.paladarpastel.backend.api.exception.EntidadeJaExisteException;
+import xyz.paladarpastel.backend.api.exception.EntidadeNaoEncotradoException;
+import xyz.paladarpastel.backend.api.exception.ImageNaoEncontrada;
 import xyz.paladarpastel.backend.api.mapper.ProdutoMapper;
 import xyz.paladarpastel.backend.api.model.dto.pedido.QuantidadeVendidaDTO;
 import xyz.paladarpastel.backend.api.model.dto.produto.ProdutoDTO;
 import xyz.paladarpastel.backend.api.model.form.produto.ProdutoForm;
+import xyz.paladarpastel.backend.domain.exception.NegocioException;
 import xyz.paladarpastel.backend.domain.services.produto.ProdutoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -39,15 +43,23 @@ public class ProdutoController {
 	@GetMapping
 	public List<ProdutoDTO> getAllProdutos() {
 		var produtos = produtoService.todosProdutos();
+
 		return produtos.stream().map(produtoMapper::toDTO).collect(Collectors.toList());
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ProdutoDTO criarProduto(@RequestBody @Valid ProdutoForm produtoForm) throws ObjetoJaExisteException {
+	public ProdutoDTO criarProduto(@RequestBody @Valid ProdutoForm produtoForm) throws EntidadeJaExisteException {
 		var produto = produtoMapper.toModel(produtoForm);
-		var produtoCriado = produtoService.criarProduto(produto);
-		return produtoMapper.toDTO(produtoCriado);
+
+		try {
+			var produtoCriado = produtoService.criarProduto(produto);
+			return produtoMapper.toDTO(produtoCriado);
+		} catch (EntidadeNaoEncotradoException e) {
+			throw new NegocioException(e.getMessage());
+		} catch (EntidadeJaExisteException e) {
+			throw new NegocioException(e.getMessage());
+		}
 
 	}
 
@@ -60,8 +72,17 @@ public class ProdutoController {
 	@PutMapping("/{id}")
 	public ProdutoDTO updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoForm produtoForm) {
 		var produto = produtoMapper.toModel(produtoForm);
-		var produtoAtualizado = produtoService.atualizarProduto(id, produto);
-		return produtoMapper.toDTO(produtoAtualizado);
+		try {
+			var produtoAtualizado = produtoService.atualizarProduto(id, produto);
+
+			return produtoMapper.toDTO(produtoAtualizado);
+		} catch (CategoriaProdutoNaoEncotrado e) {
+			throw new NegocioException(e.getMessage());
+		} catch (ImageNaoEncontrada e) {
+			throw new NegocioException(e.getMessage());
+
+		}
+
 	}
 
 	@DeleteMapping("/{id}")

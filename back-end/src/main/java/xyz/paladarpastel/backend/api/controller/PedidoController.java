@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import xyz.paladarpastel.backend.api.exception.ObjetoJaExisteException;
-import xyz.paladarpastel.backend.api.exception.ObjetoNaoEncotradoException;
+import xyz.paladarpastel.backend.api.exception.EntidadeJaExisteException;
+import xyz.paladarpastel.backend.api.exception.EntidadeNaoEncotradoException;
 import xyz.paladarpastel.backend.api.mapper.PedidoMapper;
 import xyz.paladarpastel.backend.api.model.dto.pedido.PedidoDTO;
 import xyz.paladarpastel.backend.api.model.form.pedido.PedidoForm;
+import xyz.paladarpastel.backend.domain.exception.NegocioException;
 import xyz.paladarpastel.backend.domain.exception.PedidoImpossivelDespacharException;
 import xyz.paladarpastel.backend.domain.exception.PedidoJaCanceladoException;
 import xyz.paladarpastel.backend.domain.model.pedido.Pedido;
@@ -60,23 +61,29 @@ public class PedidoController {
 	@PostMapping("{id}/despachar")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void despachar(@PathVariable Long id)
-			throws ObjetoJaExisteException, ObjetoNaoEncotradoException, PedidoImpossivelDespacharException {
+			throws EntidadeJaExisteException, EntidadeNaoEncotradoException, PedidoImpossivelDespacharException {
 		pedidoService.despachar(id);
 	}
 
 	@DeleteMapping("{id}/cancelar")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void cancelar(@PathVariable Long id) throws ObjetoNaoEncotradoException, PedidoJaCanceladoException {
+	public void cancelar(@PathVariable Long id) throws EntidadeNaoEncotradoException, PedidoJaCanceladoException {
 		pedidoService.cancelar(id);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PedidoDTO createPedido(@RequestBody @Valid PedidoForm pedidoForm) throws ObjetoJaExisteException {
+	public PedidoDTO createPedido(@RequestBody @Valid PedidoForm pedidoForm) throws EntidadeJaExisteException {
 		Pedido pedidoRecebido = pedidoMapper.toModel(pedidoForm);
-		Pedido pedidoRegistrado = pedidoService.criarPedido(pedidoRecebido);
-		return pedidoMapper.toDTO(pedidoRegistrado);
+
+		try {
+			Pedido pedidoRegistrado = pedidoService.criarPedido(pedidoRecebido);
+			return pedidoMapper.toDTO(pedidoRegistrado);
+		} catch (EntidadeNaoEncotradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
+
 	}
 
 	@GetMapping("/{id}")
