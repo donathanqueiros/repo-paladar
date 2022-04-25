@@ -29,7 +29,7 @@ public class ProdutoService {
 	private ImgProdutoRepository imgProdutoRepository;
 
 	public List<Produto> todosProdutos() {
-		return produtoRepository.findAll();
+		return produtoRepository.buscarTodos();
 	}
 
 	public Produto criarProduto(Produto produto) throws EntidadeJaExisteException {
@@ -88,16 +88,16 @@ public class ProdutoService {
 	public List<QuantidadeVendidaDTO> maisVendidos() {
 
 		List<QuantidadeVendidaDTO> quantidadeVendidas = new ArrayList<>();
-//		List<Object[]> valores = produtoPedidoRepository.maisVendidos();
-//		valores.forEach(valor -> {
-//			ProdutoPedidoDTO produto = Long.parseLong(String.valueOf(valor[0])));
-//
-//			QuantidadeVendidaDTO dto = QuantidadeVendidaDTO.builder().produto(produto)
-//					.quantidadeVendida(Long.parseLong(String.valueOf(valor[1]))).build();
-//
-//			quantidadeVendidaDTOs.add(dto);
-//
-//		});
+		// List<Object[]> valores = produtoPedidoRepository.maisVendidos();
+		// valores.forEach(valor -> {
+		// ProdutoPedidoDTO produto = Long.parseLong(String.valueOf(valor[0])));
+		//
+		// QuantidadeVendidaDTO dto = QuantidadeVendidaDTO.builder().produto(produto)
+		// .quantidadeVendida(Long.parseLong(String.valueOf(valor[1]))).build();
+		//
+		// quantidadeVendidaDTOs.add(dto);
+		//
+		// });
 		return quantidadeVendidas;
 	}
 

@@ -1,29 +1,40 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AppCardapio from "./components/cardapio/AppCardapio";
 import "antd/dist/antd.css";
 import AppAdm from "./components/admCardapio/AppAdm.jsx";
-import { Container, Row } from "react-bootstrap";
 import { GlobalContextProvider } from "./context/index.jsx";
+import PrivateRoute from "./routes/PrivateRoute";
+import Login from "./pages/Login";
+import Logoff from "./pages/Logoff";
 
 const App = () => {
   return (
-    <Container fluid>
+    <GlobalContextProvider>
       <Router>
         <Switch>
-          <GlobalContextProvider>
-            <Row>
-              <Route path="/" exact component={AppCardapio} />
-            </Row>
-            <Row>
-              <Route path="/adm" component={AppAdm} />
-            </Row>
-          </GlobalContextProvider>
+          <Route path="/" exact component={AppCardapio} />
+          <Route path="/login" exact component={Login} />
+
+          <Route exact path="/adm/singout">
+            <Logoff />
+          </Route>
+
+          <Redirect exact from="/adm" to="/adm/dashboard" />
+          <PrivateRoute path="/adm/">
+            <AppAdm />
+          </PrivateRoute>
         </Switch>
       </Router>
-    </Container>
+    </GlobalContextProvider>
   );
 };
 

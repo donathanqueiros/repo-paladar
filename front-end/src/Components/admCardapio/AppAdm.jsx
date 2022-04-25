@@ -23,16 +23,10 @@ const { SubMenu } = Menu;
 
 const PainelPrincipal = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { url, path } = useRouteMatch();
-  const history = useHistory();
 
   const onCollapse = () => {
     setCollapsed(!collapsed);
   };
-
-  useEffect(() => {
-    if (path === "/adm") history.push("/adm/dashboard");
-  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "0" }}>
@@ -40,25 +34,28 @@ const PainelPrincipal = () => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />}>
-            <Link to={`${url}/dashboard`}>DashBoard</Link>
+            <Link to={`/adm/dashboard`}>DashBoard</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="Pedidos">
             <Menu.Item key="3">
-              <Link to={`${url}/pedidos/andamento`}>Em Andamento</Link>
+              <Link to={`/adm/pedidos/andamento`}>Em Andamento</Link>
             </Menu.Item>
             <Menu.Item key="4">
-              <Link to={`${url}/pedidos/finalizados`}>Finalizados</Link>
+              <Link to={`/adm/pedidos/finalizados`}>Finalizados</Link>
             </Menu.Item>
           </SubMenu>
 
           <SubMenu key="sub2" icon={<UserOutlined />} title="Formulário">
             <Menu.Item key="5">
-              <Link to={`${url}/form/produtos`}>Produtos</Link>
+              <Link to={`/adm/form/produtos`}>Produtos</Link>
             </Menu.Item>
             <Menu.Item key="6">
-              <Link to={`${url}/form/categorias`}>Categorias</Link>
+              <Link to={`/adm/form/categorias`}>Categorias</Link>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item key="singout" icon={<PieChartOutlined />}>
+            <Link to={`/adm/singout`}>Sair</Link>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -68,33 +65,33 @@ const PainelPrincipal = () => {
             style={{ padding: 24, minHeight: 360 }}
           >
             <Switch>
-              <Route exact path={`${url}/dashboard`}>
+              <Route exact path={`/adm/dashboard`}>
                 <GraficosComponent />
               </Route>
-              <Route exact path={`${url}/pedidos/andamento`}>
+              <Route exact path={`/adm/pedidos/andamento`}>
                 <ListPedidoComponent />
               </Route>
-              <Route exact path={`${url}/pedidos/finalizados`}>
+              <Route exact path={`/adm/pedidos/finalizados`}>
                 <ListPedidoFinalizadoComponent />
               </Route>
-              <Route exact path={`${url}/form/produtos`}>
+              <Route exact path={`/adm/form/produtos`}>
                 <ListProdutoComponent />
               </Route>
-              <Route exact path={`${url}/form/categorias`}>
+              <Route exact path={`/adm/form/categorias`}>
                 <ListCategoriaComponent />
               </Route>
 
               <Route
                 exact
-                path={`${url}/form/add-produto`}
+                path={`/adm/form/add-produto`}
                 component={CreateProdutoComponent}
               />
               <Route
-                path={`${url}/form/edit-produto/:id`}
+                path={`/adm/form/edit-produto/:id`}
                 component={UpdateProdutoComponet}
               />
               <Route
-                path={`${url}/form/edit-categoria/:id`}
+                path={`/adm/form/edit-categoria/:id`}
                 component={CreateCategoriaComponent}
               />
             </Switch>

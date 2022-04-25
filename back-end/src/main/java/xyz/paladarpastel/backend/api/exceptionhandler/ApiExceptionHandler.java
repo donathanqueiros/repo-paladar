@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,9 @@ import xyz.paladarpastel.backend.domain.exception.NegocioException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+	@Autowired
+	MessageSource messageSource;
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
@@ -191,7 +197,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		BindingResult bindingResult = ex.getBindingResult();
 
 		List<Field> fields = bindingResult.getFieldErrors().stream()
-				.map(fe -> Problem.Field.builder().name(fe.getField()).userMessage(fe.getDefaultMessage()).build())
+				.map(fe -> {
+					String message = messageSource.getMessage(fe, LocaleContextHolder.getLocale());
+
+					return Problem.Field.builder().name(fe.getField()).userMessage(message).build();
+				})
 				.collect(Collectors.toList());
 
 		String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";

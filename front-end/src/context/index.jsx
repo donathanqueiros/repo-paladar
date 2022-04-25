@@ -1,4 +1,5 @@
 import React from "react";
+import { ProvideAuth } from "../hooks/useAuth";
 
 import { CarrinhoContextProvider } from "./CarrinhoContext";
 import { MobileContextProvider } from "./MobileContext";
@@ -7,12 +8,14 @@ import { ModalContextProvider } from "./ModalContext";
 
 export const GlobalContextProvider = ({ children }) => {
   return (
-    <CarrinhoContextProvider>
-      <MobileContextProvider>
-        {/* <ModalContextProvider> */}
-        {children}
-        {/* </ModalContextProvider> */}
-      </MobileContextProvider>
-    </CarrinhoContextProvider>
+    <ProvideAuth>
+      <CarrinhoContextProvider>
+        <MobileContextProvider>
+          {/* <ModalContextProvider> */}
+          {children}
+          {/* </ModalContextProvider> */}
+        </MobileContextProvider>
+      </CarrinhoContextProvider>
+    </ProvideAuth>
   );
 };

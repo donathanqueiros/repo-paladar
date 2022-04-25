@@ -2,6 +2,8 @@ package xyz.paladarpastel.backend.api.model.form.produto;
 
 import java.math.BigDecimal;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,11 +20,11 @@ import xyz.paladarpastel.backend.domain.model.produto.ImgProduto;
 @AllArgsConstructor
 public class ProdutoForm {
 
-	@NotNull
+	@NotBlank
 	@Size(min = 2, max = 100)
 	private String nome;
 
-	@NotNull
+	@NotBlank
 	@Size(min = 0, max = 100)
 	private String descricao;
 
@@ -32,8 +34,11 @@ public class ProdutoForm {
 	@NotNull
 	private BigDecimal preco;
 
+	@Valid
 	@NotNull
 	private CategoriaProduto categoriaProduto;
+
+	@Valid
 	@NotNull
 	private ImgProduto imgProduto;
 

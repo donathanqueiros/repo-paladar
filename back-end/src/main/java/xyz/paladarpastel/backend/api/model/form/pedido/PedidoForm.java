@@ -2,6 +2,7 @@ package xyz.paladarpastel.backend.api.model.form.pedido;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,11 +19,13 @@ import xyz.paladarpastel.backend.domain.model.cliente.endereco.Endereco;
 @AllArgsConstructor
 public class PedidoForm {
 
-	@NotNull
+	@NotBlank
 	private String nome;
-	@NotNull
+
+	@NotBlank
 	private String telefone;
-	@NotNull
+
+	@NotBlank
 	private String email;
 
 	@NotNull
@@ -32,7 +35,7 @@ public class PedidoForm {
 
 	private String observacao;
 
-	@NotNull
+	@NotBlank
 	@Size(min = 1)
 	private List<Long> carrinho;
 
