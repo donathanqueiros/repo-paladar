@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import xyz.paladarpastel.backend.api.model.dto.cliente.ClienteDTO;
+import xyz.paladarpastel.backend.domain.model.pedido.FormaPagamento;
 
 @Data
 @Builder
@@ -20,6 +21,9 @@ public class PedidoDTO {
 	private List<ProdutoPedidoDTO> produtos;
 	private BigDecimal total;
 	private Boolean entrega;
+	private FormaPagamento formaPagamento;
+	@Builder.Default
+	private BigDecimal troco = BigDecimal.ZERO;
 	private String status;
 	private LocalDateTime dataInicioPedido;
 	private LocalDateTime dataFimPedido;

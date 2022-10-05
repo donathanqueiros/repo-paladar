@@ -21,6 +21,7 @@ import xyz.paladarpastel.backend.domain.exception.PedidoJaCanceladoException;
 import xyz.paladarpastel.backend.domain.model.pedido.Pedido;
 import xyz.paladarpastel.backend.domain.model.pedido.ProdutoPedido;
 import xyz.paladarpastel.backend.domain.model.produto.Produto;
+import xyz.paladarpastel.backend.domain.repository.pedido.FormaPagamentoRository;
 import xyz.paladarpastel.backend.domain.repository.pedido.PedidoRepository;
 import xyz.paladarpastel.backend.domain.repository.produto.ProdutoRepository;
 
@@ -31,6 +32,7 @@ public class PedidoService {
 	private ProdutoMapper produtoMapper = ProdutoMapper.INSTANCE;
 	private PedidoRepository pedidoRepository;
 	private ProdutoRepository produtoRepository;
+	private FormaPagamentoRository formaPagamentoRepository;
 
 	public List<Pedido> todosPedidos() {
 		return pedidoRepository.findAll(Sort.by(Sort.Direction.ASC, "dataInicioPedido"));
@@ -49,6 +51,14 @@ public class PedidoService {
 		List<ProdutoPedido> produtoPedidos = pedido.getProdutos();
 
 		List<ProdutoPedido> produtoPedidosNovo = new ArrayList<>();
+
+		var formaPagamento = formaPagamentoRepository.findById(
+				pedido.getFormaPagamento().getId()).orElseThrow(
+						() -> new EntidadeNaoEncotradoException(
+								"Forma de pagamento não encontrada com o id: "
+										+ pedido.getFormaPagamento().getId()));
+
+		pedido.setFormaPagamento(formaPagamento);
 
 		Set<Long> ids = produtoPedidos.stream().map(ProdutoPedido::getId).collect(Collectors.toSet());
 

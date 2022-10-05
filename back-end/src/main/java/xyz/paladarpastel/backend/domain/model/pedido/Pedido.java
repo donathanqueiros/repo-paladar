@@ -28,6 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Builder.Default;
 import xyz.paladarpastel.backend.domain.exception.PedidoImpossivelDespacharException;
 import xyz.paladarpastel.backend.domain.exception.PedidoJaCanceladoException;
 import xyz.paladarpastel.backend.domain.model.cliente.Cliente;
@@ -49,12 +50,24 @@ public class Pedido {
 	@Builder.Default
 	@Setter(AccessLevel.PRIVATE)
 	private StatusPedido status = PENDENTE;
+
 	private Boolean entrega;
+
 	private String observacao;
+
+	@Builder.Default
+	private BigDecimal troco = BigDecimal.ZERO;
+
 	private BigDecimal total;
+
 	@Builder.Default
 	private LocalDateTime dataInicioPedido = LocalDateTime.now();
+
 	private LocalDateTime dataFimPedido;
+
+	@ManyToOne
+	@JoinColumn(name = "ID_FORMA_PAGAMENTO", nullable = false)
+	private FormaPagamento formaPagamento;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ID_CLIENTE", nullable = false)
