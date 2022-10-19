@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Col, Tabs, DatePicker } from "antd";
 import { GridContent } from "@ant-design/pro-layout";
@@ -9,12 +9,14 @@ import PedidoService from "../../../services/PedidoService.js";
 import moment from "moment";
 import ProdutoService from "../../../services/ProdutoService.js";
 import { Modal, Button, TabPane } from "react-bootstrap";
+import { ClientWSContext } from "../../../context/ClientWSContext.jsx";
 const { RangePicker } = DatePicker;
 
 export default () => {
   const [rangePickerValue, setRangePickerValue] = useState(
     getTimeDistance("week")
   );
+  const { client, connected } = useContext(ClientWSContext);
   const [tabSelected, setTabSelected] = useState("DIARIO");
 
   const [pedidos, setPedidos] = useState([]);
@@ -36,6 +38,18 @@ export default () => {
       gerarDataCardVenda();
     });
   };
+
+  useEffect(() => {
+    if (client && connected) {
+      var subscription = null;
+
+      subscription = client.subscribe("/topic/pedidos", function () {
+        attPedidos();
+      });
+
+      return () => subscription?.unsubscribe();
+    }
+  }, [client, connected]);
 
   const gerarDataCardVenda = () => {
     gerarDataMaisVendidos();

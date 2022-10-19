@@ -6,7 +6,7 @@ import static xyz.paladarpastel.backend.domain.model.pedido.StatusPedido.PENDENT
 import static xyz.paladarpastel.backend.domain.model.pedido.StatusPedido.PRONTO;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -28,7 +28,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder.Default;
 import xyz.paladarpastel.backend.domain.exception.PedidoImpossivelDespacharException;
 import xyz.paladarpastel.backend.domain.exception.PedidoJaCanceladoException;
 import xyz.paladarpastel.backend.domain.model.cliente.Cliente;
@@ -61,9 +60,8 @@ public class Pedido {
 	private BigDecimal total;
 
 	@Builder.Default
-	private LocalDateTime dataInicioPedido = LocalDateTime.now();
-
-	private LocalDateTime dataFimPedido;
+	private Date dataInicioPedido = new Date();
+	private Date dataFimPedido;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_FORMA_PAGAMENTO", nullable = false)
@@ -87,7 +85,7 @@ public class Pedido {
 
 	private void verificaSePedidoFoiEntregue(Pedido pedido) {
 		if (pedido.getStatus().equals(ENTREGUE)) {
-			pedido.setDataFimPedido(LocalDateTime.now());
+			pedido.setDataFimPedido(new Date());
 		}
 	}
 
@@ -95,7 +93,7 @@ public class Pedido {
 		if (this.status == CANCELADO)
 			throw new PedidoJaCanceladoException("Pedido", "id", this.idPedido.toString());
 		this.status = CANCELADO;
-		this.setDataFimPedido(LocalDateTime.now());
+		this.setDataFimPedido(new Date());
 	}
 
 }

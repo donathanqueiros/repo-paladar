@@ -1,6 +1,6 @@
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Link,
   Route,
@@ -17,16 +17,67 @@ import ListProdutoComponent from "./components/ListProdutoComponent";
 import CreateProdutoComponent from "./components/CreateProdutoComponent";
 import UpdateProdutoComponet from "./components/UpdateProdutoComponent";
 import CreateCategoriaComponent from "./components/CreateCategoriaComponent";
+import { toast } from "react-toastify";
+import { ClientWSContext } from "../../context/ClientWSContext";
 
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const PainelPrincipal = () => {
   const [collapsed, setCollapsed] = useState(false);
-
+  const { setClient, setConnected, connected, client } =
+    useContext(ClientWSContext);
   const onCollapse = () => {
     setCollapsed(!collapsed);
   };
+
+  useEffect(() => {
+    if (client && connected) {
+      let subscription = null;
+
+      subscription = client?.subscribe(
+        "/topic/pedidos",
+        function (message) {
+          console.log(message);
+          toast.info("Novo pedido recebido");
+        },
+        { id: "main" }
+      );
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [client, connected]);
+
+  useEffect(() => {
+    const client = new StompJs.Client({
+      brokerURL: "ws://localhost:8080/admin",
+      debug: function (str) {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    client.onConnect = function (frame) {
+      setConnected(true);
+    };
+
+    client.onStompError = function (frame) {
+      // console.log("Broker reported error: " + frame.headers["message"]);
+      // console.log("Additional details: " + frame.body);
+    };
+
+    client.activate();
+    setClient(client);
+
+    return () => {
+      setConnected(false);
+      client.deactivate();
+    };
+  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "0" }}>

@@ -1,6 +1,7 @@
 package xyz.paladarpastel.backend.domain.services.pedido;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class PedidoService {
 	private PedidoRepository pedidoRepository;
 	private ProdutoRepository produtoRepository;
 	private FormaPagamentoRository formaPagamentoRepository;
+	private NotificacaoService notificacaoService;
 
 	public List<Pedido> todosPedidos() {
 		return pedidoRepository.findAll(Sort.by(Sort.Direction.ASC, "dataInicioPedido"));
@@ -86,6 +88,13 @@ public class PedidoService {
 
 		BigDecimal valorTotal = calcularValorTotal(pedidoSalvo);
 		pedidoSalvo.setTotal(valorTotal);
+
+		try {
+			notificacaoService.notificarPedidoConfirmado(pedidoSalvo);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			// e.printStackTrace();
+		}
 
 		return pedidoSalvo;
 	}

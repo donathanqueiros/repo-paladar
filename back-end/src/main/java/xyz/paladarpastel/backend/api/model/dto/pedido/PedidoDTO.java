@@ -1,7 +1,8 @@
 package xyz.paladarpastel.backend.api.model.dto.pedido;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +26,9 @@ public class PedidoDTO {
 	@Builder.Default
 	private BigDecimal troco = BigDecimal.ZERO;
 	private String status;
-	private LocalDateTime dataInicioPedido;
-	private LocalDateTime dataFimPedido;
+
+	private Date dataInicioPedido;
+	private Date dataFimPedido;
 	private String observacao;
 
 }

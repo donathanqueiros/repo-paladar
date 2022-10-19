@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FormCheck,
   Modal,
@@ -9,17 +9,16 @@ import {
   Container,
   Table,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { ClientWSContext } from "../../../context/ClientWSContext";
 import useLoading from "../../../hooks/useLoading";
 import useMessage from "../../../hooks/useMessage";
 import PedidoService from "../../../services/PedidoService";
-const { TabPane } = Tabs;
 
 export default () => {
   const [show, setShow] = useState(false);
   const { sucess, error } = useMessage();
   const { LoadingModal, esconderLoading, mostrarLoading } = useLoading();
-
+  const { client, connected } = useContext(ClientWSContext);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -44,7 +43,6 @@ export default () => {
     PRONTO: true,
     ENTREGA: true,
   });
-  const history = useHistory();
 
   const cancelarPedido = (id) => {
     mostrarLoading();
@@ -68,7 +66,33 @@ export default () => {
         setPedidos(res.data);
       })
       .finally(esconderLoading);
+
+    console.log("entrou");
   }, []);
+
+  useEffect(() => {
+    if (client && connected) {
+      var subscription = null;
+
+      if (client.connected) {
+        subscription = client.subscribe("/topic/pedidos", function () {
+          PedidoService.getPedidosAndamento().then((res) => {
+            setPedidos(res.data);
+          });
+        });
+      } else {
+        client.onConnect = () => {
+          subscription = client.subscribe("/topic/pedidos", function () {
+            PedidoService.getPedidosAndamento().then((res) => {
+              setPedidos(res.data);
+            });
+          });
+        };
+      }
+
+      return () => subscription?.unsubscribe();
+    }
+  }, [client, connected]);
 
   const despacharPedido = (id) => {
     mostrarLoading();
@@ -192,6 +216,7 @@ export default () => {
           <tbody>
             {pedidos
               .filter((pedido) => checkBox[pedido.status])
+              .sort((a, b) => b.idPedido - a.idPedido)
               .map((pedido) => (
                 <tr key={pedido.idPedido} className="text-center">
                   <td className="align-middle fw-bold fs-5">
