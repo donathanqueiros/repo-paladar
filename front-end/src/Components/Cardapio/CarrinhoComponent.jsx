@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { colors, fontFamily } from "../../assets/css/Style";
-import CardCarrinhoComponent from "./CardCarrinhoComponent";
-import iconFechar from "../../assets/img/fechar.png";
-import carrinhoImg from "../../assets/img/carrinho2.png";
-import { Image, Container, Col, Row } from "react-bootstrap";
-import FinalizarCompraComponent from "./FinalizarCompraComponent ";
-import { CarrinhoContext } from "../../context/CarrinhoContext";
 import { Switch } from "antd";
-import styled from "styled-components";
 import TextArea from "antd/lib/input/TextArea";
+import React, { useContext, useEffect, useState } from "react";
+import { Col, Container, Image, Row } from "react-bootstrap";
+import styled from "styled-components";
+import { colors, fontFamily } from "../../assets/css/Style";
+import carrinhoImg from "../../assets/img/carrinho2.png";
+import iconFechar from "../../assets/img/fechar.png";
+import { CarrinhoContext } from "../../context/CarrinhoContext";
+import CardCarrinhoComponent from "./CardCarrinhoComponent";
+import FinalizarCompraComponent from "./FinalizarCompraComponent ";
 
 const { black, red } = colors;
 const { insani, mont } = fontFamily;
@@ -31,7 +31,11 @@ const CarrinhoComponent = ({ closeModal }) => {
   }, [carrinho]);
 
   useEffect(() => {
-    entrega ? setTaxaEntrega(5) : setTaxaEntrega(0);
+    if (entrega) {
+      setTaxaEntrega(5);
+    } else {
+      setTaxaEntrega(0);
+    }
   }, [entrega]);
 
   const preco = {
@@ -89,6 +93,18 @@ const CarrinhoComponent = ({ closeModal }) => {
               />
             </Col>
           </Row>
+          {/* <Row style={{ marginTop: "16px" }}>
+            <Col className="d-flex justify-content-start">
+              <span style={descricao}>Forma pagamento</span>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Select>
+                <Option value="dinheiro">Dinheiro</Option>
+                <Option value="cartao">Cartão</Option>
+                <Option value="pix">Pix</Option>
+              </Select>
+            </Col>
+          </Row> */}
           <Row style={{ marginTop: "4px" }}>
             <Col className="d-flex justify-content-between">
               <span style={descricao}>Valor total dos produtos</span>

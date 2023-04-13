@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
+import "antd/dist/antd.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState } from "react";
 import {
-  BrowserRouter as Router,
   Redirect,
   Route,
+  BrowserRouter as Router,
   Switch,
-  useHistory,
 } from "react-router-dom";
-import "./App.css";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import AppCardapio from "./components/cardapio/AppCardapio";
-import "antd/dist/antd.css";
+import "./App.css";
 import AppAdm from "./components/admCardapio/AppAdm.jsx";
+import AppCardapio from "./components/cardapio/AppCardapio.jsx";
 import { GlobalContextProvider } from "./context/index.jsx";
-import PrivateRoute from "./routes/PrivateRoute";
 import Login from "./pages/Login";
 import Logoff from "./pages/Logoff";
-import { ToastContainer } from "react-toastify";
+import PrivateRoute from "./routes/PrivateRoute";
 
 const App = () => {
   return (
@@ -46,7 +45,6 @@ const App = () => {
 const Teste = () => {
   // stompClient.send("/app/chat", {},
   // JSON.stringify({'from':from, 'text':text}));
-
 
   const [time, setTime] = useState({ start: null, end: null });
 

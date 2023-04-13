@@ -1,24 +1,18 @@
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Link,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ClientWSContext } from "../../context/ClientWSContext";
 import "./AppAdm.css";
+import CreateCategoriaComponent from "./components/CreateCategoriaComponent";
+import CreateProdutoComponent from "./components/CreateProdutoComponent";
 import GraficosComponent from "./components/GraficosComponent";
 import ListCategoriaComponent from "./components/ListCategoriaComponent";
 import ListPedidoComponent from "./components/ListPedidoComponent";
 import ListPedidoFinalizadoComponent from "./components/ListPedidoFinalizadoComponent";
 import ListProdutoComponent from "./components/ListProdutoComponent";
-import CreateProdutoComponent from "./components/CreateProdutoComponent";
 import UpdateProdutoComponet from "./components/UpdateProdutoComponent";
-import CreateCategoriaComponent from "./components/CreateCategoriaComponent";
-import { toast } from "react-toastify";
-import { ClientWSContext } from "../../context/ClientWSContext";
 
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
