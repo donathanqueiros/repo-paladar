@@ -16,6 +16,9 @@ public interface ProdutoRepository extends CustomRepository<Produto, Long> {
 	@Query("SELECT p FROM Produto p join fetch p.categoriaProduto join fetch p.imgProduto")
 	List<Produto> buscarTodos();
 
+	@Query("SELECT p FROM Produto p join fetch p.categoriaProduto join fetch p.imgProduto WHERE p.nome = ?1")
+	Optional<Produto> buscarPorNome(String nome);
+
 	Optional<Produto> findByNome(String nome);
 
 	List<Produto> findByCategoriaProduto(CategoriaProduto categoriaProduto);

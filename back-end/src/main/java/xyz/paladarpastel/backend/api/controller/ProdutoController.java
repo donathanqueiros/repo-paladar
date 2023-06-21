@@ -31,17 +31,17 @@ import xyz.paladarpastel.backend.domain.exception.NegocioException;
 import xyz.paladarpastel.backend.domain.services.produto.ProdutoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
 
 	@Autowired
 	private ProdutoService produtoService;
-
 	private final ProdutoMapper produtoMapper = ProdutoMapper.INSTANCE;
 
 	@GetMapping
-	public List<ProdutoDTO> getAllProdutos() {
+	public List<ProdutoDTO> todosProdutos() {
 		var produtos = produtoService.todosProdutos();
 
 		return produtos.stream().map(produtoMapper::toDTO).collect(Collectors.toList());
@@ -63,14 +63,8 @@ public class ProdutoController {
 
 	}
 
-	@GetMapping("/{id}")
-	public ProdutoDTO GetProdutoById(@PathVariable Long id) {
-		var produtoEncontrado = produtoService.buscarPorId(id);
-		return produtoMapper.toDTO(produtoEncontrado);
-	}
-
 	@PutMapping("/{id}")
-	public ProdutoDTO updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoForm produtoForm) {
+	public ProdutoDTO atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoForm produtoForm) {
 		var produto = produtoMapper.toModel(produtoForm);
 		try {
 			var produtoAtualizado = produtoService.atualizarProduto(id, produto);
@@ -83,6 +77,12 @@ public class ProdutoController {
 
 		}
 
+	}
+
+	@GetMapping("/{id}")
+	public ProdutoDTO GetProdutoById(@PathVariable Long id) {
+		var produtoEncontrado = produtoService.buscarPorId(id);
+		return produtoMapper.toDTO(produtoEncontrado);
 	}
 
 	@DeleteMapping("/{id}")

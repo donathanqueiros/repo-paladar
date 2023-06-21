@@ -28,8 +28,7 @@ public class ProdutoForm {
 	@Size(min = 0, max = 100)
 	private String descricao;
 
-	@NotNull
-	private Boolean ativo;
+	private Boolean ativo = true;
 
 	@NotNull
 	private BigDecimal preco;

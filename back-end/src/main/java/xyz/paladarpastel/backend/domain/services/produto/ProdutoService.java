@@ -48,13 +48,6 @@ public class ProdutoService {
 		return produtoRepository.save(produto);
 	}
 
-	public Produto buscarPorId(Long id) throws EntidadeNaoEncotradoException {
-		return verificaSeExiste(id);
-	}
-
-	public List<Produto> buscarPorCategoria(Long id) {
-		return produtoRepository.findByCategoriaProduto(CategoriaProduto.builder().id(id).build());
-	}
 
 	public Produto atualizarProduto(Long id, Produto produto) {
 
@@ -68,6 +61,30 @@ public class ProdutoService {
 		return produtoRepository.save(produto);
 	}
 
+	public void ativarPorId(Long id) {
+		Produto produto = verificaSeExiste(id);
+		produto.ativar();
+		produtoRepository.save(produto);
+	}
+
+	public void desativarPorId(Long id) {
+		Produto produto = verificaSeExiste(id);
+		produto.desativar();
+		produtoRepository.save(produto);
+	}
+	
+
+
+	public Produto buscarPorId(Long id) throws EntidadeNaoEncotradoException {
+		return verificaSeExiste(id);
+	}
+
+
+
+
+	public List<Produto> buscarPorCategoria(Long id) {
+		return produtoRepository.findByCategoriaProduto(CategoriaProduto.builder().id(id).build());
+	}
 	public void deletarPorId(Long id) throws EntidadeNaoEncotradoException {
 		verificaSeExiste(id);
 		produtoRepository.deleteById(id);
@@ -101,16 +118,6 @@ public class ProdutoService {
 		return quantidadeVendidas;
 	}
 
-	public void ativarPorId(Long id) {
-		Produto produto = verificaSeExiste(id);
-		produto.ativar();
-		produtoRepository.save(produto);
-	}
 
-	public void desativarPorId(Long id) {
-		Produto produto = verificaSeExiste(id);
-		produto.desativar();
-		produtoRepository.save(produto);
-	}
 
 }

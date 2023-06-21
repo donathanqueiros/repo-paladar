@@ -1,18 +1,3 @@
-INSERT INTO
-  FORMA_PAGAMENTO (IDFORMA_PAGAMENTO, NOME)
-VALUES
-  (1, 'PIX');
-
-INSERT INTO
-  FORMA_PAGAMENTO (IDFORMA_PAGAMENTO, NOME)
-VALUES
-  (2, 'DINHEIRO');
-
-INSERT INTO
-  FORMA_PAGAMENTO (IDFORMA_PAGAMENTO, NOME)
-VALUES
-  (3, 'CARTÃO');
-
 --
 INSERT INTO
   img_produto (id, path, src)
@@ -67,6 +52,21 @@ VALUES
     'src/main/java/xyz/paladarpastel/backend/imagens/6.jpg',
     'http://localhost:8080/img/6'
   );
+
+INSERT INTO
+  forma_pagamento (IDFORMA_PAGAMENTO, NOME)
+VALUES
+  (1, 'PIX');
+
+INSERT INTO
+  forma_pagamento (IDFORMA_PAGAMENTO, NOME)
+VALUES
+  (2, 'DINHEIRO');
+
+INSERT INTO
+  forma_pagamento (IDFORMA_PAGAMENTO, NOME)
+VALUES
+  (3, 'CARTÃO');
 
 INSERT INTO
   categoria_produto (nome)

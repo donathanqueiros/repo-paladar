@@ -77,6 +77,8 @@ public class PedidoController {
 	public PedidoDTO createPedido(@RequestBody @Valid PedidoForm pedidoForm) throws EntidadeJaExisteException {
 		Pedido pedidoRecebido = pedidoMapper.toModel(pedidoForm);
 
+		System.out.println("passou aqui");
+
 		try {
 			Pedido pedidoRegistrado = pedidoService.criarPedido(pedidoRecebido);
 			return pedidoMapper.toDTO(pedidoRegistrado);

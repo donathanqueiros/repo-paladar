@@ -12,13 +12,17 @@ import xyz.paladarpastel.backend.api.model.dto.pedido.PedidoDTO;
 @Controller
 public class NotificationControler {
 
-    @Autowired
-    private PedidoMapper pedidoMapper;
-
     @MessageMapping("/pedidos")
     @SendTo("/topic/pedidos")
     public PedidoDTO send(PedidoDTO pedidoDTO) {
+        System.out.println();
         return pedidoDTO;
+    }
+    @MessageMapping("/teste")
+    @SendTo("/topic/teste")
+    public String send(String valor) {
+        System.out.println(valor);
+        return valor;
     }
 
 }

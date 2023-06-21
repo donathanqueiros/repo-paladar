@@ -22,7 +22,7 @@ const HeaderComponent = ({ showModal }) => {
             (isMobile ? "justify-content-center" : "")
           }
         >
-          <img src={logo}></img>
+          {/* <img src={logo}></img> */}
         </Col>
         <Col
           md={4}

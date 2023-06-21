@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +18,7 @@ public class StompController implements StompSessionHandler {
     @Override
     public void afterConnected(
             StompSession session, StompHeaders connectedHeaders) {
+                System.out.println("Connected");
         session.send("/app/teste", "enviou msg");
     }
 

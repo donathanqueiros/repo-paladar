@@ -88,7 +88,7 @@ public class PedidoService {
 
 		BigDecimal valorTotal = calcularValorTotal(pedidoSalvo);
 		pedidoSalvo.setTotal(valorTotal);
-
+		System.out.println("passou aqui3");
 		try {
 			notificacaoService.notificarPedidoConfirmado(pedidoSalvo);
 		} catch (Exception e) {

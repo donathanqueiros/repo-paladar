@@ -38,9 +38,9 @@ public class NotificacaoService {
         stompClient.setMessageConverter(new CompositeMessageConverter(converters));
 
         StompSessionHandler sessionHandler = new StompController();
-        var session = stompClient.connect("ws://localhost:8080/admin", sessionHandler).get();
+        var session = stompClient.connect("ws://localhost:8080/teste", sessionHandler).get();
 
-        session.send("/app/pedidos", pedidoMapper.toDTO(pedido));
+        // session.send("/app/pedidos", pedidoMapper.toDTO(pedido));
 
     }
 
