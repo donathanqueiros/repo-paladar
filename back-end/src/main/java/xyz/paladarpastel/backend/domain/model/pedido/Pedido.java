@@ -64,7 +64,7 @@ public class Pedido {
 	private Date dataFimPedido;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_FORMA_PAGAMENTO", nullable = false)
+	@JoinColumn(name = "ID_FORMA_PAGAMENTO", nullable = true)
 	private FormaPagamento formaPagamento;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)

@@ -1,7 +1,6 @@
 package xyz.paladarpastel.backend.domain.services.pedido;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +16,7 @@ import lombok.AllArgsConstructor;
 import xyz.paladarpastel.backend.api.exception.EntidadeNaoEncotradoException;
 import xyz.paladarpastel.backend.api.exception.ProdutoInativoException;
 import xyz.paladarpastel.backend.api.mapper.ProdutoMapper;
+import xyz.paladarpastel.backend.domain.exception.NegocioException;
 import xyz.paladarpastel.backend.domain.exception.PedidoImpossivelDespacharException;
 import xyz.paladarpastel.backend.domain.exception.PedidoJaCanceladoException;
 import xyz.paladarpastel.backend.domain.model.pedido.Pedido;
@@ -54,13 +54,19 @@ public class PedidoService {
 
 		List<ProdutoPedido> produtoPedidosNovo = new ArrayList<>();
 
-		var formaPagamento = formaPagamentoRepository.findById(
-				pedido.getFormaPagamento().getId()).orElseThrow(
-						() -> new EntidadeNaoEncotradoException(
-								"Forma de pagamento não encontrada com o id: "
-										+ pedido.getFormaPagamento().getId()));
+		if (pedido.getEntrega()) {
+			if (pedido.getFormaPagamento() == null)
+				throw new NegocioException("Forma de pagamento é obrigatória para pedidos de entrega.");
 
-		pedido.setFormaPagamento(formaPagamento);
+			var formaPagamento = formaPagamentoRepository.findById(
+					pedido.getFormaPagamento().getId()).orElseThrow(
+							() -> new EntidadeNaoEncotradoException(
+									"Forma de pagamento não encontrada com o id: "
+											+ pedido.getFormaPagamento().getId()));
+
+			pedido.setFormaPagamento(formaPagamento);
+
+		}
 
 		Set<Long> ids = produtoPedidos.stream().map(ProdutoPedido::getId).collect(Collectors.toSet());
 
@@ -90,7 +96,8 @@ public class PedidoService {
 		pedidoSalvo.setTotal(valorTotal);
 		System.out.println("passou aqui3");
 		try {
-			notificacaoService.notificarPedidoConfirmado(pedidoSalvo);
+
+			// notificacaoService.notificarPedidoConfirmado(pedidoSalvo);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			// e.printStackTrace();

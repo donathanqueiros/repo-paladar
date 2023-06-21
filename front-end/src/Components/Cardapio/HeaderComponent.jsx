@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import logo from "../../assets/img/logo.png";
+import { Col, Container, Image, Row } from "react-bootstrap";
+import styled from "styled-components";
 import { colors, fontFamily, fontSize } from "../../assets/css/Style";
 import carrinho from "../../assets/img/carrinho.png";
-import { Col, Container, Image, Row } from "react-bootstrap";
 import { MobileContext } from "../../context/MobileContext";
-import styled from "styled-components";
 
 const { red, yellow } = colors;
 const { insani } = fontFamily;

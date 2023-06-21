@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Col, Tabs, DatePicker } from "antd";
 import { GridContent } from "@ant-design/pro-layout";
+import { Col, DatePicker, Tabs } from "antd";
+import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Modal, TabPane } from "react-bootstrap";
+import { ClientWSContext } from "../../../context/ClientWSContext.jsx";
+import PedidoService from "../../../services/PedidoService.js";
+import ProdutoService from "../../../services/ProdutoService.js";
 import ProportionSales from "./graficos/ProportionSales.jsx";
 import SalesCard from "./graficos/SalesCard.jsx";
-import { getTimeDistance } from "./utils/utils";
-import PedidoService from "../../../services/PedidoService.js";
-import moment from "moment";
-import ProdutoService from "../../../services/ProdutoService.js";
-import { Modal, Button, TabPane } from "react-bootstrap";
-import { ClientWSContext } from "../../../context/ClientWSContext.jsx";
+import { getTimeDistance } from "./utils/utils.js";
 const { RangePicker } = DatePicker;
 
 export default () => {

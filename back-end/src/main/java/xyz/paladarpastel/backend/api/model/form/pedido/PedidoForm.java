@@ -32,7 +32,6 @@ public class PedidoForm {
 
 	private BigDecimal troco;
 
-	@NotNull
 	private FormaPagamento formaPagamento;
 
 	@NotNull

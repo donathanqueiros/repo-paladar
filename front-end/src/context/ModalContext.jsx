@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-import ModalComponent from "../components/cardapio/ModalComponent";
 
 export const ModalContext = createContext();
 
