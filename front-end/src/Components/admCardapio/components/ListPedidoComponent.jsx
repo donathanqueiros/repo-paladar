@@ -234,8 +234,8 @@ export default () => {
                   <td className="align-middle" style={{ maxWidth: "200px" }}>
                     {renderProdutosPedido(pedido)}{" "}
                     {/* {pedido.observacao && `obs: "${pedido.observacao}"`} */}
-                    {pedido.observacao &&
-                      `obs: "gostaria de adiconar aquele item ao pedido asdssad  asdsad asdas das das das s das d sd"`}
+                    {/* {pedido.observacao &&
+                      `obs: "gostaria de adiconar aquele item ao pedido asdssad  asdsad asdas das das das s das d sd"`} */}
                   </td>
                   <td className="align-middle">
                     {"R$ " +
